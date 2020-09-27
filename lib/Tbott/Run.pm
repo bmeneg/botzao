@@ -13,8 +13,8 @@ use Tbott::Config;
 our $tbott = Bot::IRC->new(
     connect => {
         server  => 'chat.freenode.net',
-        port    => '6697',
-        ssl     => 1,
+        port    => '6667',
+        ssl     => 0,
         nick    => 'botiozao',
         join    => ['##tbott'],
     }
