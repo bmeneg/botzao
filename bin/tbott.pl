@@ -26,15 +26,15 @@ getopts("", \%args);
 
 Tbott::Run::run();
 
-sub HELP_MESSAGE() {
+sub HELP_MESSAGE(@) {
 	print <<~ "_END_HELP";
-	Usage: ./tbott.pl [OPTIONS]
+    Usage: ./tbott.pl [OPTIONS]
         --help      this help message
         --version   script version
-	_END_HELP
+    _END_HELP
 }
 
-sub VERSION_MESSAGE() {
+sub VERSION_MESSAGE(@) {
 	print <<~ "_END_VERSION";
 	tbott v$VERSION - alpha
 	_END_VERSION
