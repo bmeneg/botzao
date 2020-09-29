@@ -12,7 +12,7 @@ use Path::Tiny qw(path);
 
 # We have two basic structures here: 1 hash containing the valid config
 # options, and another hash to store tha actual values.
-our %cfg_valid = (
+my %cfg_valid = (
     'core'    => [ qw(logfile) ],
     'irc'     => [ qw(nick password name server port channels) ],
 );
