@@ -22,11 +22,13 @@ our $tbott = Bot::IRC->new(
 
 # Anything after the -- on tbott.pl is processed in here
 sub run() {
-    ( scalar @ARGV == 1 ) or die 'too many bot argumets';
+    my $err;
 
-    say 'load config';
-    Tbott::Config::config_load();
-    say 'populate bot settings';
+    die 'too many bot argumets' unless ( scalar @ARGV <= 1 );
+
+    $err = Tbott::Config::config_load();
+    die 'failed to load bot settings' unless $err == 0;
+
     $tbott->run;
 }
 
