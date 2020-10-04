@@ -11,7 +11,7 @@ use Data::Dumper;
 use Bot::IRC;
 use Tbott::Config;
 
-our $tbott;
+our $bot;
 our %core;
 
 sub _init_bot(%config) {
@@ -19,7 +19,7 @@ sub _init_bot(%config) {
         logfile => $config{'core'}->{'logfile'} // 'bot.log',
     );
 
-    $tbott = Bot::IRC->new(
+    $bot = Bot::IRC->new(
         connect => {
             server  => $config{'irc'}->{'server'} // 'chat.freenode.net',
             port    => $config{'irc'}->{'port'} // '6667',
@@ -42,7 +42,7 @@ sub run() {
     say Dumper(%config);
     _init_bot(%config);
 
-    $tbott->run;
+    $bot->run;
 }
 
 1;
