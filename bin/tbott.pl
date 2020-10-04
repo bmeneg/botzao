@@ -29,8 +29,8 @@ Tbott::Run::run();
 sub HELP_MESSAGE(@) {
 	print <<~ "_END_HELP";
     Usage: ./tbott.pl [OPTIONS]
-        --help      this help message
-        --version   script version
+        --help              this help message
+        --version           script version
     _END_HELP
 }
 

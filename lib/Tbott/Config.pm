@@ -13,26 +13,22 @@ use Path::Tiny qw(path);
 # We have two basic structures here: 1 hash containing the valid config
 # options, and another hash to store tha actual values.
 my %cfg_valid = (
-    'core'    => [ qw(logfile) ],
-    'irc'     => [ qw(nick password name server port channels) ],
+    core    => [ qw(logfile) ],
+    irc     => [ qw(nick password name server port channels) ],
 );
 
-our %cfg_loaded;
+my %cfg_loaded;
 
 # List of config file to be considered in priority order
 my @cfg_files = ('~/.tbott.toml');
 
 sub _is_cfg_valid($topic, $option = undef) {
-    if (not defined $topic) {
-        return ("config: topic can be null", 1);
-    }
-
     if (not defined $option) {
-        return ("", 0) if exists $cfg_valid{$topic};
+        return (undef, 0) if exists $cfg_valid{$topic};
         return ("config: invalid topic: $topic", 1);
     }
 
-    return ("", 0) if grep { $_ eq $option } @{$cfg_valid{$topic}};
+    return (undef, 0) if grep { $_ eq $option } @{$cfg_valid{$topic}};
     return ("config: invalid option: $topic.$option", 1);
 }
 
@@ -47,10 +43,11 @@ sub _toml_unmarshal_to_config(%data) {
         foreach my $opt (keys %$opts) {
             ($ret_msg, $ret_err) = _is_cfg_valid($topic, $opt);
             return ($ret_msg, $ret_err) unless $ret_err == 0;
+            $cfg_loaded{$topic}->{$opt} = $opts->{$opt};
         }
     }
-
-    return ("", 0);
+    
+    return (undef, 0);
 }
 
 sub _compose_config() {
@@ -66,7 +63,7 @@ sub _compose_config() {
         return ($ret_msg, $ret_err) unless $ret_err == 0;
     }
 
-    return ("", 0)
+    return (undef, 0);
 }
 
 sub config_load() {
@@ -75,10 +72,10 @@ sub config_load() {
     ($ret_msg, $ret_err) = _compose_config();
     if ($ret_err != 0) {
         say "$ret_msg";
-        return 1;
+        return undef;
     }
 
-    return 0;
+    return %cfg_loaded;
 }
 
 1;

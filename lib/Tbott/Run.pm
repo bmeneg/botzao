@@ -7,27 +7,40 @@ use strict;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
+use Data::Dumper;
 use Bot::IRC;
 use Tbott::Config;
 
-our $tbott = Bot::IRC->new(
-    connect => {
-        server  => 'chat.freenode.net',
-        port    => '6667',
-        ssl     => 0,
-        nick    => 'botiozao',
-        join    => ['##tbott'],
-    }
-);
+our $tbott;
+our %core;
+
+sub _init_bot(%config) {
+    %core = (
+        logfile => $config{'core'}->{'logfile'} // 'bot.log',
+    );
+
+    $tbott = Bot::IRC->new(
+        connect => {
+            server  => $config{'irc'}->{'server'} // 'chat.freenode.net',
+            port    => $config{'irc'}->{'port'} // '6667',
+            ssl     => 0,
+            nick    => $config{'irc'}->{'nick'} // 'botiozao',
+            join    => $config{'irc'}->{'channels'} // ['##tbott'],
+        },
+    );
+}
 
 # Anything after the -- on tbott.pl is processed in here
 sub run() {
-    my $err;
+    my %config;
 
-    die 'too many bot argumets' unless ( scalar @ARGV <= 1 );
+    die 'too many bot arguments' unless (scalar @ARGV <= 1);
 
-    $err = Tbott::Config::config_load();
-    die 'failed to load bot settings' unless $err == 0;
+    %config = Tbott::Config::config_load();
+    die 'failed to load bot settings' unless %config;
+    # DEBUG ONLY
+    say Dumper(%config);
+    _init_bot(%config);
 
     $tbott->run;
 }
