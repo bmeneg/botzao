@@ -20,9 +20,9 @@ my %cfg_valid = (
 my %cfg_loaded;
 
 # List of config file to be considered in priority order
-my @cfg_files = ('~/.tbott.toml');
+my @default_cfg_files = ('~/.tbott.toml');
 
-sub _is_cfg_valid($topic, $option = undef) {
+sub _is_config_valid($topic, $option = undef) {
     if (not defined $option) {
         return (undef, 0) if exists $cfg_valid{$topic};
         return ("config: invalid topic: $topic", 1);
@@ -37,22 +37,26 @@ sub _toml_unmarshal_to_config(%data) {
 
     # Check config topic and option if they're valid ones
     while (my ($topic, $opts) = each %data) {
-        ($ret_msg, $ret_err) = _is_cfg_valid($topic);
+        ($ret_msg, $ret_err) = _is_config_valid($topic);
         return ($ret_msg, $ret_err) unless $ret_err == 0;
 
         foreach my $opt (keys %$opts) {
-            ($ret_msg, $ret_err) = _is_cfg_valid($topic, $opt);
+            ($ret_msg, $ret_err) = _is_config_valid($topic, $opt);
             return ($ret_msg, $ret_err) unless $ret_err == 0;
             $cfg_loaded{$topic}->{$opt} = $opts->{$opt};
         }
     }
-    
+
     return (undef, 0);
 }
 
-sub _compose_config() {
+sub _compose($filename) {
     my ($cfg_data, $cfg_topics);
     my ($ret_msg, $ret_err);
+    my @cfg_files = ($filename);
+
+    # Config file passed by the user has precedence.
+    @cfg_files = @default_cfg_files unless defined $filename;
 
     foreach my $file (@cfg_files) {
         next unless (-r glob($file));
@@ -66,10 +70,10 @@ sub _compose_config() {
     return (undef, 0);
 }
 
-sub config_load() {
+sub load($filename) {
     my ($ret_msg, $ret_err);
 
-    ($ret_msg, $ret_err) = _compose_config();
+    ($ret_msg, $ret_err) = _compose($filename);
     if ($ret_err != 0) {
         say "$ret_msg";
         return undef;

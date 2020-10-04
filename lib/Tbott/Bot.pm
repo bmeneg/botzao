@@ -14,7 +14,7 @@ use Tbott::Config;
 our $bot;
 our %core;
 
-sub _init_bot(%config) {
+sub _config_init(%config) {
     %core = (
         logfile => $config{'core'}->{'logfile'} // 'bot.log',
     );
@@ -30,18 +30,16 @@ sub _init_bot(%config) {
     );
 }
 
+sub init($cfg_file) {
+    my %config = Tbott::Config::load($cfg_file);
+    die 'failed to load bot settings' unless %config;
+    say Dumper(%config); # DEBUG ONLY
+    _config_init(%config);
+}
+
 # Anything after the -- on tbott.pl is processed in here
 sub run() {
-    my %config;
-
     die 'too many bot arguments' unless (scalar @ARGV <= 1);
-
-    %config = Tbott::Config::config_load();
-    die 'failed to load bot settings' unless %config;
-    # DEBUG ONLY
-    say Dumper(%config);
-    _init_bot(%config);
-
     $bot->run;
 }
 

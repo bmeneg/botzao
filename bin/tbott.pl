@@ -24,6 +24,16 @@ our $VERSION = "0.1";
 my %args;
 getopts("c:", \%args);
 
+my $cfg_file = undef;
+if (defined $args{'c'}) {
+    my $file = $args{'c'};
+
+    if (-e $file) {
+        $cfg_file = $file;
+    }
+}
+
+Tbott::Bot::init($cfg_file);
 Tbott::Bot::run();
 
 sub HELP_MESSAGE(@) {
