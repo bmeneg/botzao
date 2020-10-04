@@ -16,15 +16,15 @@ use lib "$FindBin::Bin/../lib";
 use Getopt::Std;
 
 # Local libs
-use Tbott::Run;
+use Tbott::Bot;
 
 $Getopt::Std::STANDARD_HELP_VERSION = 1;
 our $VERSION = "0.1";
 
 my %args;
-getopts("", \%args);
+getopts("c:", \%args);
 
-Tbott::Run::run();
+Tbott::Bot::run();
 
 sub HELP_MESSAGE(@) {
 	print <<~ "_END_HELP";

@@ -1,4 +1,4 @@
-package Tbott::Run;
+package Tbott::Bot;
 
 use v5.20;
 use warnings;
