@@ -36,7 +36,7 @@ if (defined $args{'c'}) {
 Tbott::Bot::init($cfg_file);
 Tbott::Bot::run();
 
-sub HELP_MESSAGE(@) {
+sub HELP_MESSAGE {
 	print <<~ "_END_HELP";
     Usage: ./tbott.pl [OPTIONS]
         -c <file>       configuration file
@@ -45,7 +45,7 @@ sub HELP_MESSAGE(@) {
     _END_HELP
 }
 
-sub VERSION_MESSAGE(@) {
+sub VERSION_MESSAGE {
 	print <<~ "_END_VERSION";
 	tbott v$VERSION - alpha
 	_END_VERSION
