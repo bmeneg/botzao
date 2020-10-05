@@ -1,0 +1,16 @@
+theme = perl7
+
+[TestingAndDebugging::RequireUseStrict]
+add_themes = perl7
+
+[TestingAndDebugging::RequireUseWarnings]
+add_themes = perl7
+
+[InputOutput::ProhibitBarewordFileHandles]
+add_themes = perl7
+
+[Freenode::MultidimensionalArrayEmulation]
+add_themes = perl7
+
+[Freenode::Prototypes]
+add_themes = perl7

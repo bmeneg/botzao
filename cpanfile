@@ -5,3 +5,10 @@ feature 'sqlite', 'SQLite support' => sub {
     # Possible solution for storage
     recommends 'DBD::SQLite';
 }
+
+on 'develop' => sub {
+    requires 'Perl::Critic';
+    requires 'Perl::Critic::Policy::Freenode::MultidimensionalArrayEmulation';
+    requires 'Perl::Critic::Policy::Freenode::Prototypes';
+    requires 'Perl::Critic::Policy::Subroutines::ProhibitSubroutinePrototypes';
+};
