@@ -37,7 +37,7 @@ Tbott::Bot::init($cfg_file);
 Tbott::Bot::run();
 
 sub HELP_MESSAGE {
-	print <<~ "_END_HELP";
+    print <<~ "_END_HELP";
     Usage: ./tbott.pl [OPTIONS]
         -c <file>       configuration file
         --help          this help message
@@ -46,7 +46,7 @@ sub HELP_MESSAGE {
 }
 
 sub VERSION_MESSAGE {
-	print <<~ "_END_VERSION";
-	tbott v$VERSION - alpha
-	_END_VERSION
+    print <<~ "_END_VERSION";
+    tbott v$VERSION - alpha
+    _END_VERSION
 }
