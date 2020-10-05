@@ -10,7 +10,7 @@ deps:
 	cpanm $(ENABLE_DEVELOP) $(ENABLE_SQLITE) --installdeps .
 
 check:
-	perlcritic --profile .perlcriticrc --theme perl7
+	perlcritic --profile .perlcriticrc --theme perl7 .
 
 help:
 	@echo "tbott project makefile"
