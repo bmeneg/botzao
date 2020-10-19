@@ -1,13 +1,11 @@
-requires 'Bot::IRC', '1.25'; # IRC Bot module
-requires 'TOML', '0.97'; # config file
-
-feature 'sqlite', 'SQLite support' => sub {
-    # Possible solution for storage
-    requires 'DBD::SQLite';
-};
+requires 'Bot::IRC'; # IRC Bot module
+requires 'TOML'; # config file
+requires 'Mojo::SQLite'; # generic storage
+requires 'Mojo::Redis'; # plugins storage
 
 on 'develop' => sub {
+    requires 'Test::Perl::Critic::Policy';
     requires 'Perl::Critic';
-    requires 'Perl::Critic::Policy::Freenode::MultidimensionalArrayEmulation';
     requires 'Perl::Critic::Policy::Freenode::Prototypes';
+    requires 'Perl::Critic::Policy::Freenode::MultidimensionalArrayEmulation';
 };

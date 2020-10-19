@@ -16,7 +16,7 @@ use lib "$FindBin::Bin/../lib";
 use Getopt::Std;
 
 # Local libs
-use Tbott::Bot;
+use BotZao::Core;
 
 $Getopt::Std::STANDARD_HELP_VERSION = 1;
 our $VERSION = "0.1";
@@ -33,12 +33,12 @@ if (defined $args{'c'}) {
     }
 }
 
-Tbott::Bot::init($cfg_file);
-Tbott::Bot::run();
+BotZao::Core::init($cfg_file);
+BotZao::Core::run(@ARGV);
 
 sub HELP_MESSAGE {
     print <<~ "_END_HELP";
-    Usage: ./tbott.pl [OPTIONS]
+    Usage: ./BotZao.pl [OPTIONS]
         -c <file>       configuration file
         --help          this help message
         --version       script version
@@ -47,6 +47,6 @@ sub HELP_MESSAGE {
 
 sub VERSION_MESSAGE {
     print <<~ "_END_VERSION";
-    tbott v$VERSION - alpha
+    BotZao v$VERSION - alpha
     _END_VERSION
 }

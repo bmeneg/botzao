@@ -1,4 +1,4 @@
-# tbott project
+# cbot project
 
 Generic IRC (plus TwitchTV features) chatbot
 

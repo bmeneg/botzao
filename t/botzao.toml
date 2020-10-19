@@ -1,0 +1,11 @@
+[core]
+logfile = "bot.log"
+
+[irc]
+server = "chat.freenode.net"
+port = "6667"
+nick = "botzao-test"
+plugins = ["Ping", "Greeting"]
+
+[plugin_greetings]
+enable = 1
