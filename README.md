@@ -1,6 +1,6 @@
-# cbot project
+# BotZao project
 
-Generic IRC (plus TwitchTV features) chatbot
+That's the biggest chat bot you'll ever see. That's the BotZão!
 
 # TODO list
 ## Core
@@ -27,3 +27,7 @@ Generic IRC (plus TwitchTV features) chatbot
 - [ ] add local storage
   - [ ] redis
   - [ ] sqlite
+
+# Contributing to the project
+
+Please, follow the instructions in [CONTRIBUTING](./CONTRIBUTING.md)
