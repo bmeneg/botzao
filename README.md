@@ -9,7 +9,8 @@ Generic IRC (plus TwitchTV features) chatbot
 - [x] check valid configuration file topics + options
 - [x] set config from config file
 - [x] enable config from cli arg
-- [ ] enable external logging (file)
+- [x] enable external logging (file)
+- [x] enable logging level
 - [ ] allow bot run as a daemon (systemd)
 - [ ] enable important log level to land to system log (systemd)
 - [ ] enable plugin mechanism
@@ -22,5 +23,7 @@ Generic IRC (plus TwitchTV features) chatbot
 - [ ] enable `joke` command (depends on local storage plugin)
 
 ## Plugins
-- [ ] use IRC::Bot plugin mechanism
-- [ ] add local storage with sqlite
+- [x] use IRC::Bot plugin mechanism
+- [ ] add local storage
+  - [ ] redis
+  - [ ] sqlite
