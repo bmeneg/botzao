@@ -47,6 +47,6 @@ sub HELP_MESSAGE {
 
 sub VERSION_MESSAGE {
     print <<~ "_END_VERSION";
-    BotZao v$VERSION - alpha
+    BotZao v$VERSION
     _END_VERSION
 }
