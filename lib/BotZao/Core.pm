@@ -20,11 +20,11 @@ my %cfg_loaded;
 sub init($cfg_file) {
 	%cfg_loaded = BotZao::Config::load($cfg_file);
 
-    BotZao::Log::init(%cfg_loaded) or croak('failed to initialize logging system');
+	BotZao::Log::init(%cfg_loaded) or croak('failed to initialize logging system');
 	#BotZao::DB::Core::init(%cfg_loaded) or die 'failed to initialize redis db';
 	BotZao::IM::Core::init(%cfg_loaded) or log_fatal('failed to initialize im');
 
-    say Dumper(%cfg_loaded); # DEBUG
+	say Dumper(%cfg_loaded); # DEBUG
 }
 
 # Anything after the '--' is processed in here

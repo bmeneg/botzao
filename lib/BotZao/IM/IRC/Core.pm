@@ -13,26 +13,26 @@ use BotZao::Log qw(log_error);
 
 my $bot;
 my %cfg_loaded = (
-    irc     => [ qw(nick password name server port channels plugins) ],
+	irc	=> [ qw(nick password name server port channels plugins) ],
 );
 
 sub _init_config(%config) {
-    $bot = Bot::IRC->new(
-        connect => {
-            server  => $config{'irc'}->{'server'} // 'chat.freenode.net',
-            port    => $config{'irc'}->{'port'} // '6667',
-            ssl     => 0,
-            nick    => $config{'irc'}->{'nick'} // 'botiozao',
-            join    => $config{'irc'}->{'channels'} // ['#BotZao'],
-        },
-    );
+	$bot = Bot::IRC->new(
+		connect => {
+			server	=> $config{'irc'}->{'server'} // 'chat.freenode.net',
+			port	=> $config{'irc'}->{'port'} // '6667',
+			ssl		=> 0,
+			nick	=> $config{'irc'}->{'nick'} // 'botiozao',
+			join	=> $config{'irc'}->{'channels'} // ['#BotZao'],
+		},
+	);
 }
 
 sub _init_plugins(@plugins) {
-    foreach (@plugins) {
-        $bot->load($_);
-    }
-    return;
+	foreach (@plugins) {
+		$bot->load($_);
+	}
+	return;
 }
 
 sub init(%config) {
@@ -45,7 +45,7 @@ sub init(%config) {
 }
 
 sub run(@args) {
-    if (scalar @args != 1) {
+	if (scalar @args != 1) {
 		log_error("irc bot must have one argument only");
 		return;
 	}

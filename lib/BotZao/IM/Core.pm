@@ -11,7 +11,7 @@ use BotZao::IM::IRC::Core;
 
 sub init(%config) {
 	BotZao::IM::Plugins::Core::init(%config);
-    BotZao::IM::IRC::Core::init(%config);
+	BotZao::IM::IRC::Core::init(%config);
 	return 1;
 }
 

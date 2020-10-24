@@ -16,21 +16,21 @@ my $command = 'joke';
 my @cfg_valid = ( qw(jokes_file jokes_redis_url) );
 
 sub init($bot) {
-    BotZao::IM::Plugins::Commands::add_channel_cmd($command);
-    BotZao::IM::IRC::Core::plugin_add($name, &init);
+	BotZao::IM::Plugins::Commands::add_channel_cmd($command);
+	BotZao::IM::IRC::Core::plugin_add($name, &init);
 
-    $bot->hook(
-        {
-            to_me => 1,
-            text  => qr/(?<cmd>${prefix}joke)(?<ignore>.*)/,
-        },
-        sub {
-            my ( $bot, $in, $m ) = @_;
+	$bot->hook(
+		{
+			to_me	=> 1,
+			text	=> qr/(?<cmd>${prefix}joke)(?<ignore>.*)/,
+		},
+		sub {
+			my ( $bot, $in, $m ) = @_;
 
-            return unless BotZao::Commands::has_permission($in->{nick});
-            $bot->reply("$in->{nick}, don't use the word: $m->{word}.");
-        },
-    );
+			return unless BotZao::Commands::has_permission($in->{nick});
+			$bot->reply("$in->{nick}, don't use the word: $m->{word}.");
+		},
+	);
 }
 
 1;

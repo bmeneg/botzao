@@ -10,7 +10,7 @@ no warnings qw(experimental::signatures);
 use Mojo::SQLite;
 
 sub init(%config) {
-    return;
+	return;
 }
 
 1;
