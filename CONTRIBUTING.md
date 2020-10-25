@@ -23,6 +23,11 @@ Also, as you may have noticed, this project is written in Perl, and Perl
 community has a (not so hard)
 [style guide](https://perldoc.perl.org/perlstyle). It must be followed.
 
+Another really good source of information for Perl programming, with lots of
+good practices is the
+[Modern Perl book](http://modernperlbooks.com/books/modern_perl_2016/index.html),
+which is a free and online book.
+
 ## Git Workflow
 
 We don't follow any too fancy git workflow. With that, the only requirement
