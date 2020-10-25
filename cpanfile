@@ -6,8 +6,8 @@ requires 'Mojo::Redis'; # plugins storage
 on 'develop' => sub {
 	requires 'Test2';
 	requires 'Test::Perl::Critic';
-    requires 'Test::Perl::Critic::Policy';
-    requires 'Perl::Critic';
-    requires 'Perl::Critic::Policy::Freenode::Prototypes';
-    requires 'Perl::Critic::Policy::Freenode::MultidimensionalArrayEmulation';
+	requires 'Test::Perl::Critic::Policy';
+	requires 'Perl::Critic';
+	requires 'Perl::Critic::Policy::Freenode::Prototypes';
+	requires 'Perl::Critic::Policy::Freenode::MultidimensionalArrayEmulation';
 };
