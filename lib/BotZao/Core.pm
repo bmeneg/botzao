@@ -9,7 +9,7 @@ no warnings qw(experimental::signatures);
 
 use Data::Dumper;
 use Carp qw(croak);
-use BotZao::Log qw(log_fatal);
+use BotZao::Log qw(log_debug log_fatal);
 use BotZao::Config;
 use BotZao::DB::Redis;
 use BotZao::DB::SQLite;
@@ -24,7 +24,7 @@ sub init($cfg_file) {
 	#BotZao::DB::Core::init(%cfg_loaded) or die 'failed to initialize redis db';
 	BotZao::IM::Core::init(%cfg_loaded) or log_fatal('failed to initialize im');
 
-	say Dumper(%cfg_loaded); # DEBUG
+	log_debug("".Dumper(%cfg_loaded));
 }
 
 # Anything after the '--' is processed in here

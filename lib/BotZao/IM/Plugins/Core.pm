@@ -7,7 +7,7 @@ use warnings;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use BotZao::Log qw(log_info log_error);
+use BotZao::Log qw(log_debug log_info log_error);
 
 # plugin hash = { name => sub_run_ref }
 my %plugins_hash;
@@ -27,7 +27,7 @@ sub init(%config) {
 	my @plugins;
 
 	@plugins = @{$config{im}->{plugins}};
-	log_info(@plugins);
+	log_debug("plugins loaded: @plugins");
 	_init_plugins(%config, @plugins);
 	return;
 }
