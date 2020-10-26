@@ -1,7 +1,5 @@
 requires 'Bot::IRC'; # IRC Bot module
 requires 'TOML'; # config file
-requires 'Mojo::SQLite'; # generic storage
-requires 'Mojo::Redis'; # plugins storage
 
 on 'develop' => sub {
 	requires 'Devel::NYTProf'
