@@ -1,0 +1,13 @@
+# profiling files
+nytprof/
+nytprof.*
+
+# logging files
+*.log
+
+# editor files
+.vscode/
+.vim/
+.config/
+.buff
+.*.swp
