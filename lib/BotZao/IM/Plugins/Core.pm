@@ -26,6 +26,11 @@ sub plugin_add($name, $sub_ref) {
 sub init(%config) {
 	my @plugins;
 
+	if (not $config{im}) {
+		log_debug("no generic IM plugins were specified");
+		return;
+	}
+
 	@plugins = @{$config{im}->{plugins}};
 	log_debug("plugins loaded: @plugins");
 	_init_plugins(%config, @plugins);
