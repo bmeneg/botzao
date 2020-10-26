@@ -7,6 +7,7 @@ use strict;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
+use BotZao::IM::Plugins::Core;
 use BotZao::IM::IRC::Core;
 
 sub init(%config) {

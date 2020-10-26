@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use feature qw(signatures);
-no warnings experimental qw(signatures);
+no warnings qw(experimental::signatures);
 
 use BotZao::Log qw(log_error);
 
