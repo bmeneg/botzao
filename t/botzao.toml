@@ -1,5 +1,6 @@
-[core]
-logfile = "bot.log"
+[logging]
+file = "bot.log"
+level = 4
 
 [irc]
 server = "chat.freenode.net"
