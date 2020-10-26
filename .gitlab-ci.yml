@@ -1,0 +1,11 @@
+default:
+    image: perl:latest
+    before_script:
+        - perl -v
+        - curl -L https://cpanmin.us | perl - App::cpanminus
+        - make deps
+
+test:
+    script:
+        - make PHASE_TEST=1 deps
+        - make check
