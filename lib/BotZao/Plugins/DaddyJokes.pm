@@ -1,4 +1,4 @@
-package BotZao::IM::Plugins::DaddyJokes;
+package BotZao::Plugins::DaddyJokes;
 
 use v5.20;
 use warnings;
@@ -8,16 +8,16 @@ use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
 use Bot::IRC;
-use BotZao::IM::Plugins::Commands;
+use BotZao::Plugins::Commands;
 
-my $prefix = BotZao::IM::Plugins::Commands::prefix();
+my $prefix = BotZao::Plugins::Commands::prefix();
 my $name = "DaddyJokes";
 my $command = 'joke';
 my @cfg_valid = ( qw(jokes_file jokes_redis_url) );
 
 sub init($bot) {
-	BotZao::IM::Plugins::Commands::add_channel_cmd($command);
-	BotZao::IM::IRC::Core::plugin_add($name, &init);
+	BotZao::Plugins::Commands::add_channel_cmd($command);
+	BotZao::IRC::Core::plugin_add($name, &init);
 
 	$bot->hook(
 		{
@@ -27,7 +27,7 @@ sub init($bot) {
 		sub {
 			my ( $bot, $in, $m ) = @_;
 
-			return unless BotZao::Commands::has_permission($in->{nick});
+			return unless BotZao::Plugins::Commands::has_permission($in->{nick});
 			$bot->reply("$in->{nick}, don't use the word: $m->{word}.");
 		},
 	);

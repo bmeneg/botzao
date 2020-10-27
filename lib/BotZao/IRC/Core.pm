@@ -1,4 +1,4 @@
-package BotZao::IM::IRC::Core;
+package BotZao::IRC::Core;
 
 use v5.20;
 use warnings;
