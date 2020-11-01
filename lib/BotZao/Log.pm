@@ -23,7 +23,9 @@ use constant {
 	LOG_LEVEL__LAST => 5,
 };
 
-my $cfg_topic = 'logging';
+my $cfg_topic = 'core';
+my $cfg_opt_file = 'log_file';
+my $cfg_opt_level = 'log_level';
 my %cfg = (
 	file => './botzao.log',
 	level => LOG_LEVEL_WARN,
@@ -75,9 +77,11 @@ sub log_debug($msg) {
 }
 
 sub init(%config) {
-	$cfg{file} = $config{$cfg_topic}->{file} if $config{$cfg_topic}->{file};
-	$cfg{level} = $config{$cfg_topic}->{level} if $config{$cfg_topic}->{level};
-	return 1 if ($cfg{level} < LOG_LEVEL__LAST);
+	my %cfg_log = %{$config{$cfg_topic}};
+
+	$cfg{file} = $cfg_log{$cfg_opt_file} if $cfg_log{$cfg_opt_file};
+	$cfg{level} = $cfg_log{$cfg_opt_level} if $cfg_log{$cfg_opt_level};
+	return -1 if ($cfg{level} < LOG_LEVEL__LAST);
 	return;
 }
 
