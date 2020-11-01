@@ -1,4 +1,4 @@
-package BotZao::Plugins::Commands;
+package BotZao::IM::Commands;
 
 use v5.20;
 use strict;

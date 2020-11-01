@@ -9,7 +9,7 @@ no warnings qw(experimental::signatures);
 
 use Data::Dumper;
 use Bot::IRC;
-use BotZao::Log qw(log_error);
+use BotZao::Log qw(log_info log_error);
 
 my $bot;
 my %cfg_loaded = (
@@ -28,19 +28,20 @@ sub _init_config(%config) {
 	);
 }
 
-sub _init_plugins(@plugins) {
-	foreach (@plugins) {
-		$bot->load($_);
-	}
-	return;
-}
-
 sub init(%config) {
 	my @plugins;
 
 	_init_config(%config);
+
 	@plugins = @{$config{irc}->{plugins}};
-	_init_plugins(@plugins);
+	foreach (@plugins) {
+		$bot->load($_);
+	}
+
+	@plugins = BotZao::Plugins::Core::export_plugins_info();
+	BotZao::IRC::GenericPlugins::load(@plugins);
+	$bot->load("BotZao::IRC::GenericPlugins");
+
 	return;
 }
 

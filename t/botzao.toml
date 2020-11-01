@@ -1,6 +1,7 @@
 [core]
 log_file = "bot.log"
 log_level = 4
+plugins = [ "DaddyJokes" ]
 
 [irc]
 server = "chat.freenode.net"
@@ -8,5 +9,5 @@ port = "6667"
 nick = "botzao-test"
 plugins = ["Ping", "Greeting"]
 
-[plugin_greetings]
-enable = 1
+[plugin_DaddyJokes]
+jokes_file = "./lib/BotZao/Plugins/DaddyJokes.txt"
