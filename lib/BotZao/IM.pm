@@ -17,8 +17,7 @@ sub init(%config) {
 }
 
 sub run(@args) {
-	BotZao::IRC::Core::run(@args) or return;
-	return 1;
+	return BotZao::IRC::Core::run(@args);
 }
 
 1;

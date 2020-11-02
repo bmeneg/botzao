@@ -23,7 +23,8 @@ sub init($cfg_file) {
 
 # Anything after the '--' is processed in here
 sub run(@args) {
-	BotZao::IM::run(@args) or log_fatal('failed to run im');
+	my $err = BotZao::IM::run(@args);
+	log_fatal('failed to run im') if $err;
 	return;
 }
 

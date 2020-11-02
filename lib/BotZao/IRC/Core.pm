@@ -41,18 +41,16 @@ sub init(%config) {
 	@plugins = BotZao::Plugins::Core::export_plugins_info();
 	BotZao::IRC::GenericPlugins::load(@plugins);
 	$bot->load("BotZao::IRC::GenericPlugins");
-
 	return;
 }
 
 sub run(@args) {
 	if (scalar @args != 1) {
 		log_error("irc bot must have one argument only");
-		return;
+		return -1;
 	}
-
 	$bot->run;
-	return 1;
+	return;
 }
 
 1;
