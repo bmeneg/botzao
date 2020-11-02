@@ -7,11 +7,7 @@ use warnings;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use constant {
-	CMD_CHANNEL	=> 0,
-	CMD_USER	=> 1,
-	CMD_ADMIN	=> 2,
-};
+use BotZao::Log qw(log_fatal);
 
 use constant {
 	PERM_NONE	=> 0,
@@ -43,35 +39,45 @@ my %cmd_valid = (
 	},
 );
 
-sub add_channel_cmd($name) {
-	if (defined $name || length $name != 0) {
-		push @{$cmd_valid{channel}{cmds}}, ($name);
+sub _add_cmd($perm, $name) {
+	my $type;
+
+	log_fatal('command name must not be empty') if length $name == 0;
+
+	for ($perm) {
+		when (PERM_NONE) { $type = 'channel' };
+		when (PERM_USER) { $type = 'user' };
+		when (PERM_MOD) { $type = 'mod' };
+		when (PERM_ADMIN) { $type = 'admin' };
 	}
+	push @{$cmd_valid{$type}{cmds}}, ($name);
+	return;
+}
+
+sub add_channel_cmd($name) {
+	_add_cmd(PERM_NONE, $name);
 	return;
 }
 
 sub add_user_cmd($name) {
-	if (defined $name || length $name != 0) {
-		push @{$cmd_valid{user}{cmds}}, ($name);
-	}
+	_add_cmd(PERM_USER, $name);
 	return;
 }
 
 sub add_mod_cmd($name) {
-	if (defined $name || length $name != 0) {
-		push @{$cmd_valid{mod}{cmds}}, ($name);
-	}
+	_add_cmd(PERM_MOD, $name);
 	return;
 }
 
 sub add_admin_cmd($name) {
-	if (defined $name || length $name != 0) {
-		push @{$cmd_valid{admin}->{cmds}}, ($name);
-	}
+	_add_cmd(PERM_ADMIN, $name);
 	return;
 }
 
-sub has_permission($user, $request) {
+sub has_permission($user, $cmd) {
+	return if not exists $cmd_valid{cmd};
+	return 1 if $cmd_valid{cmd}{perm} == PERM_NONE;
+	return 1 if $user && $user{perm} >= $cmd_valid{cmd}{perm};
 	return;
 }
 
