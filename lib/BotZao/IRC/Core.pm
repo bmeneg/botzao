@@ -19,11 +19,11 @@ my %cfg_loaded = (
 sub _init_config(%config) {
 	$bot = Bot::IRC->new(
 		connect => {
-			server	=> $config{'irc'}->{'server'} // 'chat.freenode.net',
-			port	=> $config{'irc'}->{'port'} // '6667',
+			server	=> $config{irc}{server} // 'chat.freenode.net',
+			port	=> $config{irc}{port} // '6667',
 			ssl		=> 0,
-			nick	=> $config{'irc'}->{'nick'} // 'botiozao',
-			join	=> $config{'irc'}->{'channels'} // ['#BotZao'],
+			nick	=> $config{irc}{nick} // 'botiozao',
+			join	=> $config{irc}{channels} // ['#BotZao'],
 		},
 	);
 }
@@ -33,7 +33,7 @@ sub init(%config) {
 
 	_init_config(%config);
 
-	@plugins = @{$config{irc}->{plugins}};
+	@plugins = @{$config{irc}{plugins}};
 	foreach (@plugins) {
 		$bot->load($_);
 	}
