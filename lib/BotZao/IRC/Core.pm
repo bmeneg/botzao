@@ -8,7 +8,10 @@ use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
 use Data::Dumper;
+
 use Bot::IRC;
+
+use BotZao::IRC::GenericPlugins;
 use BotZao::Log qw(log_info log_error);
 
 my $bot;

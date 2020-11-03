@@ -41,3 +41,5 @@ sub init(@args) {
 sub load(@plugins) {
 	@generic_plugins = @plugins;
 }
+
+1;
