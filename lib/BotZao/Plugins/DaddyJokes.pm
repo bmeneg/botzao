@@ -7,9 +7,10 @@ use strict;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use BotZao::Commands;
-use BotZao::Log qw(log_debug log_fatal);
 use Bot::IRC;
+
+use BotZao::Commands;
+use BotZao::Log qw(log_debug log_info log_fatal);
 
 my $cmd_prefix = BotZao::Commands::prefix();
 my $plugin_name = "DaddyJokes";
@@ -47,18 +48,19 @@ sub _get_random_qa($max) {
 
 sub call($user) {
 	log_debug("$user asked for a DaddyJokes");
-	return unless BotZao::IM::Commands::has_permission($user);
+	return BotZao::Plugins::Core::plugin_ret(())
+		unless BotZao::Commands::has_permission($plugin_cmd, $user);
 
 	my ($q, $a) = _get_random_qa($jokes_count);
 	log_error("joke index greater than joke count") unless $q;
-	return BotZao::IM::Plugins::Core::plugin_ret($q, $a);
+	log_debug("question: " . $q);
+	log_debug("answer: " . $a);
+	return BotZao::Plugins::Core::plugin_ret(($q, $a));
 }
 
 sub _init_config(%config) {
-	my %cfg;
-
-	if (exists $config{plugin_$plugin_name}) {
-		%cfg = %{$config{plugin_$plugin_name}};
+	if (exists $config{"plugin_$plugin_name"}) {
+		my %cfg = %{$config{"plugin_$plugin_name"}};
 		$jokes_file = $cfg{$cfg_opt_file} if $cfg{$cfg_opt_file};
 		log_info("DaddyJokes file set to $jokes_file");
 	}
@@ -66,17 +68,23 @@ sub _init_config(%config) {
 }
 
 sub init(%config) {
+	log_debug("daddyjokes: init");
 	_init_config(%config);
 	$jokes_count = _number_of_jokes();
 }
 
-my %plugin_info = (
-	init => \&init,
-	run => \&call,
-	trigger => qr/\b${cmd_prefix}[jJ][oO][kK][eE]\b/,
-);
+sub register() {
+	my %plugin_info = (
+		init => \&init,
+		run => \&call,
+		trigger => qr/${cmd_prefix}[jJ][oO][kK][eE]/,
+	);
 
-BotZao::IM::Plugins::Core::plugin_add($plugin_name, %plugin_info);
-BotZao::IM::Commands::add_channel_cmd($plugin_cmd);
+	log_debug("daddyjokes: register");
+
+	BotZao::Plugins::Core::plugin_add($plugin_name, %plugin_info);
+	BotZao::Commands::add_channel_cmd($plugin_cmd);
+	return;
+}
 
 1;

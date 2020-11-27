@@ -8,7 +8,6 @@ use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
 use Data::Dumper;
-
 use Bot::IRC;
 
 use BotZao::IRC::GenericPlugins;
@@ -23,8 +22,9 @@ sub _init_config(%config) {
 	$bot = Bot::IRC->new(
 		connect => {
 			server	=> $config{irc}{server} // 'chat.freenode.net',
-			port	=> $config{irc}{port} // '6667',
-			ssl		=> 0,
+			port	=> $config{irc}{port} // '6697',
+			ssl	=> 0,
+			ipv6	=> 0,
 			nick	=> $config{irc}{nick} // 'botiozao',
 			join	=> $config{irc}{channels} // ['#BotZao'],
 		},
@@ -36,14 +36,17 @@ sub init(%config) {
 
 	_init_config(%config);
 
-	@plugins = @{$config{irc}{plugins}};
+	# Bot-IRC keep the order of added plugins, and generic plugins
+	# should take precedence, so overwriting default plugins are possible
+	@plugins = @{ BotZao::Plugins::Core::export_plugins_info() };
+	BotZao::IRC::GenericPlugins::load(@plugins);
+	$bot->load("BotZao::IRC::GenericPlugins");
+
+	@plugins = @{ $config{irc}{plugins} };
 	foreach (@plugins) {
 		$bot->load($_);
 	}
 
-	@plugins = BotZao::Plugins::Core::export_plugins_info();
-	BotZao::IRC::GenericPlugins::load(@plugins);
-	$bot->load("BotZao::IRC::GenericPlugins");
 	return;
 }
 

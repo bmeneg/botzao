@@ -9,12 +9,13 @@ no warnings qw(experimental::signatures);
 
 use Data::Dumper;
 use Carp qw(croak);
+
 use BotZao::Log qw(log_debug log_fatal);
 use BotZao::Config;
 use BotZao::IM;
 
 sub init($cfg_file) {
-	my %cfg_loaded = BotZao::Config::load($cfg_file);
+	my %cfg_loaded = %{BotZao::Config::load($cfg_file)};
 
 	BotZao::Log::init(%cfg_loaded) or croak('failed to initialize logging system');
 	BotZao::IM::init(%cfg_loaded) or log_fatal('failed to initialize im');

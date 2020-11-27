@@ -7,7 +7,8 @@ use warnings;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use BotZao::Log qw(log_debug log_info log_error);
+use Data::Dumper;
+use BotZao::Log qw(log_debug log_info log_error log_fatal);
 
 my $cfg_topic = 'core';
 my $cfg_opt_plugins = 'plugins';
@@ -23,12 +24,19 @@ sub _init_plugins(%config) {
 	my @plugins = @{$config{$cfg_topic}{$cfg_opt_plugins}};
 
 	log_debug("plugins loaded: @plugins");
+	foreach (@plugins) {
+		my $module = "BotZao::Plugins::$_";
 
-	foreach (@enabled_plugins_ref) {
-		if (exists $plugins[$_{name}]) {
-			&{$_{init}}(%config) or log_error("failed to load generic plugin $_{name}");
-			$_{enabled} = 1;
-		}
+		eval "require $module";
+		log_fatal("failed to require plugin module $module: $@") if $@;
+		eval "${module}::register()";
+		log_fatal("failed to register plugin module $module: $@") if $@;
+	}
+
+	foreach my $pinfo (@enabled_plugins_ref) {
+		$pinfo->{init}->(%config) or
+			log_fatal("failed to load plugin " . $pinfo->{name});
+		$pinfo->{enabled} = 1;
 	}
 	return;
 }
@@ -36,29 +44,24 @@ sub _init_plugins(%config) {
 sub export_plugins_info() {
 	my @infos;
 
-	foreach (@enabled_plugins_ref) {
-		my %plugin_info = (
-			{
-				run => $_{run},
-				trigger => $_{trigger},
-			},
-		);
-		push @infos, ( %plugin_info ) if $_{enabled};
+	foreach my $pinfo (@enabled_plugins_ref) {
+		next unless $pinfo->{enabled};
+		push @infos, { run => $pinfo->{run}, trigger => $pinfo->{trigger} };
 	}
-	return undef unless scalar @infos != 0;
-	return @infos;
+	return \@infos;
 }
 
 sub plugin_add($name, %info) {
 	my %plugin = (
-		name => "$name",
+		name => $name,
 		init => $info{init},
 		run => $info{run},
 		trigger => $info{trigger},
 		enabled => 0,
 	);
 
-	push @enabled_plugins_ref, %plugin;
+	log_debug("plugin added:\n".Dumper(%plugin));
+	push @enabled_plugins_ref, \%plugin;
 	return;
 }
 
