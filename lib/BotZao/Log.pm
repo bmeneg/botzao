@@ -34,7 +34,7 @@ my %cfg = (
 sub log_error($msg) {
 	return if $cfg{level} < LOG_LEVEL_ERROR;
 
-	print STDERR "error: $msg\n";
+	carp("error: $msg\n");
 	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
 	print $fh ctime() . " | error: $msg\n";
 	close($fh) or carp('failed to close log file');
@@ -49,7 +49,7 @@ sub log_fatal($msg) {
 sub log_warn($msg) {
 	return if $cfg{level} < LOG_LEVEL_WARN;
 
-	print STDERR "warn: $msg\n";
+	carp("warning: $msg\n");
 	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
 	print $fh ctime() . " | warning: $msg\n";
 	close($fh) or carp('failed to close log file');
