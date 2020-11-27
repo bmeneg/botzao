@@ -9,6 +9,8 @@ no warnings qw(experimental::signatures);
 
 use TOML qw(from_toml to_toml);
 use Path::Tiny qw(path);
+use Hash::Util qw(lock_hash);
+
 use BotZao::Log qw(log_warn);
 
 my $cfg_file_default = '~/.botzao.toml';
@@ -37,7 +39,9 @@ sub _unmarshal($filename) {
 sub load($filename) {
 	my %cfg_loaded = %{_unmarshal($filename)};
 	log_warn("Using default values.") unless %cfg_loaded;
-	return %cfg_loaded;
+	# Make sure we don't mess the hash in runtime
+	lock_hash(%cfg_loaded);
+	return \%cfg_loaded;
 }
 
 1;
