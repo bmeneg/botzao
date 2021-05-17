@@ -2,7 +2,7 @@ ifeq ($(PHASE_DEVELOP), 1)
 	ENABLE_DEVELOP = --with-develop
 endif
 ifeq ($(PHASE_TEST), 1)
-	ENABLE_DEVELOP = --with-test
+	ENABLE_TEST = --with-feature=test
 endif
 
 deps:
