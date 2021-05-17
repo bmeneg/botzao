@@ -11,22 +11,36 @@ That's the biggest chat bot you'll ever see. That's the BotZão!
 - [x] enable config from cli arg
 - [x] enable external logging (file)
 - [x] enable logging level
-- [ ] allow bot run as a daemon (systemd)
-- [ ] enable important log level to land to system log (systemd)
-- [ ] enable plugin mechanism
+- ~~[ ] allow bot run as a daemon (systemd)~~ (container)
+- ~~[ ] enable important log level to land to system log (systemd)~~ (container)
+- [x] enable plugin mechanism
+
+## Plugin Engine
+- [x] enable IRC support (IRC::Bot)
+- [ ] enable TwitchTV Chat support (existent module?)
+- [ ] add local storage
+  - [ ] redis (temporary)
+  - [ ] sqlite (persistent)
+
+## Plugins
+- [ ] enable chat user commands (possibly using `!` char)
+  - [x] IRC support
+  - [ ] TwitchTV support
+- [ ] enable `joke` command
+  - [x] IRC support
+  - [ ] TwitchTV support
+- [ ] enable `greetings` command
+  - [x] IRC support
+  - [ ] TwitchTV support
+
+## IRC
+- [x] handle basic login to server
+  - [x] server, nickname, channel
+  - [x] SSL/TLS
 
 ## TwitchTV
 - [ ] handle basic login (OAuth) to server
 - [ ] handle basic messages from server
-- [ ] enable chat user commands (possibly using `!` char)
-- [ ] enable `greetings` command
-- [ ] enable `joke` command (depends on local storage plugin)
-
-## Plugins
-- [x] use IRC::Bot plugin mechanism
-- [ ] add local storage
-  - [ ] redis
-  - [ ] sqlite
 
 # Contributing to the project
 
