@@ -21,12 +21,12 @@ my %cfg_loaded = (
 sub _init_config(%config) {
 	$bot = Bot::IRC->new(
 		connect => {
-			server	=> $config{irc}{server} // 'chat.freenode.net',
+			server	=> $config{irc}{server} // 'irc.libera.chat',
 			port	=> $config{irc}{port} // '6697',
 			ssl	=> 0,
 			ipv6	=> 0,
 			nick	=> $config{irc}{nick} // 'botiozao',
-			join	=> $config{irc}{channels} // ['#BotZao'],
+			join	=> $config{irc}{channels} // ['##BotZao'],
 		},
 	);
 }

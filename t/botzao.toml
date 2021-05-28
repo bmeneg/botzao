@@ -4,7 +4,7 @@ log_level = 4
 plugins = [ "DaddyJokes" ]
 
 [irc]
-server = "chat.freenode.net"
+server = "irc.libera.chat"
 port = "6667"
 nick = "botzao-test"
 plugins = ["Ping", "Greeting"]
