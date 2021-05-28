@@ -10,7 +10,7 @@ no warnings qw(experimental::signatures);
 use Bot::IRC;
 
 use BotZao::Commands;
-use BotZao::Log qw(log_debug log_info log_fatal);
+use BotZao::Log qw(log_debug log_info log_error log_fatal);
 
 my $cmd_prefix = BotZao::Commands::prefix();
 my $plugin_name = "DaddyJokes";
@@ -27,7 +27,7 @@ sub _number_of_jokes() {
 
 sub _get_random_qa($max) {
 	my $joke_num = int(rand($max));
-	my $q;
+	my $q, $a;
 
 	if (not -r $jokes_file) {
 		log_error("failed to read file $jokes_file");
@@ -41,9 +41,12 @@ sub _get_random_qa($max) {
 			$q = $_;
 			next;
 		}
-		return ($q, $_);
+		$a = $_;
+		last;
 	}
-	return (undef, undef);
+
+	close($fh);
+	return ($q, $a);
 }
 
 sub call($user) {
