@@ -53,9 +53,6 @@ sub init(@args) {
 
 					foreach (0 .. ($ret->{ret_val_count} - 1)) {
 						my $line = $ret->{ret_val}->[$_];
-						my $utf8 = guess_encoding($line, 'utf8');
-
-						$line = ref $utf8 ? decode('utf8', $line) : decode('cp1252', $line);
 						$bot->reply("" . $line);
 					}
 					return 1;
