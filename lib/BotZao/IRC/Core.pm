@@ -10,7 +10,7 @@ no warnings qw(experimental::signatures);
 use Data::Dumper;
 use Bot::IRC;
 
-use BotZao::IRC::GenericPlugins;
+use BotZao::IRC::GenericHook;
 use BotZao::Log qw(log_info log_error);
 
 my $bot;
@@ -39,8 +39,8 @@ sub init(%config) {
 	# Bot-IRC keep the order of added plugins, and generic plugins
 	# should take precedence, so overwriting default plugins are possible
 	@plugins = @{ BotZao::Plugins::Core::export_plugins_info() };
-	BotZao::IRC::GenericPlugins::load(@plugins);
-	$bot->load("BotZao::IRC::GenericPlugins");
+	BotZao::IRC::GenericHook::load(@plugins);
+	$bot->load("BotZao::IRC::GenericHook");
 
 	@plugins = @{ $config{irc}{plugins} };
 	foreach (@plugins) {

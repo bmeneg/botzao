@@ -1,4 +1,4 @@
-package BotZao::IRC::GenericPlugins;
+package BotZao::IRC::GenericHook;
 
 use v5.20;
 use warnings;
@@ -24,7 +24,7 @@ use BotZao::Plugins::Core;
 # 2.1. check if text matches the trigger condition
 # 2.2.1 in case it matches, execute the plugin and stop the loop
 # 2.2.2 otherwise, continue to the next plugin
-# 3. return control to Bot-IRC 
+# 3. return control to Bot-IRC
 
 my $cmd_prefix = BotZao::Commands::prefix();
 my @generic_plugins;
@@ -66,7 +66,7 @@ sub init(@args) {
 }
 
 sub load(@plugins) {
-	log_debug("genericplugins: load " . Dumper(@plugins));
+	log_debug("generichook: load " . Dumper(@plugins));
 	@generic_plugins = @plugins;
 }
 
