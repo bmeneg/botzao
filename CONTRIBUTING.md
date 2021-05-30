@@ -19,14 +19,27 @@ wrap_width = 80
 indent_style = tab
 ```
 
-Also, as you may have noticed, this project is written in Perl, and Perl
+As you may have noticed, this project is written in Perl, and Perl
 community has a (not so hard)
 [style guide](https://perldoc.perl.org/perlstyle). It must be followed.
-
 Another really good source of information for Perl programming, with lots of
 good practices is the
 [Modern Perl book](http://modernperlbooks.com/books/modern_perl_2016/index.html),
 which is a free and online book.
+
+For this project we aren't using object-oriented programming, so, whenever 
+possible, structured interfaces will be used rather then OO. Of course,
+sometimes it's not possible, sometimes the dependency are all written in a
+OO style, so we can't do much.
+
+Another important information is: we don't use function prototypes, but
+it's mandatory to use function signatures with each parameter called out.
+It's possible by using the following snippet in every module:
+
+```perl
+use feature qw(signatures);
+no warnings qw(experimental::signatures);
+```
 
 ## Git Workflow
 
