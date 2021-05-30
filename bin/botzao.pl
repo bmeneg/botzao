@@ -1,4 +1,8 @@
 #!/usr/bin/env perl
+#
+# BotZao entry file for running it as an executable
+#
+# Author: Bruno Meneguele <bmeneg@redhat.com>
 
 # Perl boilerplate
 use v5.20;
@@ -11,8 +15,6 @@ no warnings qw(experimental::signatures);
 # General lib setup
 use FindBin;
 use lib "$FindBin::Bin/../lib";
-
-# General libs
 use Getopt::Std;
 
 # Local libs

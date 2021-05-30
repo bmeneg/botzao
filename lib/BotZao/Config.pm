@@ -15,7 +15,8 @@ use BotZao::Log qw(log_warn);
 
 my $cfg_file_default = '~/.botzao.toml';
 
-sub _unmarshal($filename) {
+# _parse_toml converts the TOML data into a common hash
+sub _parse_toml($filename) {
 	my $data;
 	my $topics;
 	my $err;
@@ -27,7 +28,7 @@ sub _unmarshal($filename) {
 		return;
 	}
 
-	$data = path($cfg_file)->slurp;
+	$data = path($cfg_file)->slurp();
 	($topics, $err) = from_toml($data);
 	if (not $topics) {
 		log_warn("config: error parsing toml: $err", 1);
@@ -36,8 +37,10 @@ sub _unmarshal($filename) {
 	return $topics;
 }
 
+# Load the config file (TOML format) to memory in a common hash format and
+# lock the hash to avoid further modification.
 sub load($filename) {
-	my %cfg_loaded = %{_unmarshal($filename)};
+	my %cfg_loaded = %{_parse_toml($filename)};
 	log_warn("Using default values.") unless %cfg_loaded;
 	# Make sure we don't mess the hash in runtime
 	lock_hash(%cfg_loaded);

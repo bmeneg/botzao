@@ -18,6 +18,8 @@ my %cfg_loaded = (
 	irc	=> [ qw(nick password name server port channels plugins) ],
 );
 
+# Initialize the Bot-IRC module with the config file information.
+# TODO: redirect Bot-IRC output to the same as BotZao.
 sub _init_config(%config) {
 	$bot = Bot::IRC->new(
 		connect => {
@@ -42,6 +44,7 @@ sub init(%config) {
 	BotZao::IRC::GenericHook::load(@plugins);
 	$bot->load("BotZao::IRC::GenericHook");
 
+	# Load the IRC specific plugins from config file
 	@plugins = @{ $config{irc}{plugins} };
 	foreach (@plugins) {
 		$bot->load($_);
@@ -50,12 +53,13 @@ sub init(%config) {
 	return;
 }
 
+# run must be called only once plugins are properly setup.
 sub run(@args) {
-	if (scalar @args != 1) {
+	if (@#args != 1) {
 		log_error("irc bot must have one argument only");
 		return -1;
 	}
-	$bot->run;
+	$bot->run();
 	return;
 }
 

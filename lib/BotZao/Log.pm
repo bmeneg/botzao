@@ -1,3 +1,8 @@
+# The logging system is somewhat the same for every project.
+# All call to the log_* functions stores the log in a specific file (possibly
+# defined in the config file) and also print to STDOUT.
+# TODO: allow an option (--quiet ?) to disable logging to STDOUT.
+
 package BotZao::Log;
 
 use v5.20;
@@ -26,6 +31,7 @@ use constant {
 my $cfg_topic = 'core';
 my $cfg_opt_file = 'log_file';
 my $cfg_opt_level = 'log_level';
+# log default values
 my %cfg = (
 	file => './botzao.log',
 	level => LOG_LEVEL_WARN,
@@ -79,6 +85,7 @@ sub log_debug($msg) {
 sub init(%config) {
 	my %cfg_log = %{$config{$cfg_topic}};
 
+	# prefer the values stored in the config file
 	$cfg{file} = $cfg_log{$cfg_opt_file} if $cfg_log{$cfg_opt_file};
 	$cfg{level} = $cfg_log{$cfg_opt_level} if $cfg_log{$cfg_opt_level};
 	return -1 if ($cfg{level} < LOG_LEVEL__LAST);
