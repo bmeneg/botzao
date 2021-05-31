@@ -100,10 +100,10 @@ sub plugin_add($info) {
 }
 
 # Default return value expected by the callback API.
-sub plugin_ret(@ret_val) {
+sub plugin_ret($ret_val) {
 	return {
-		ret_val_count => scalar @ret_val,
-		ret_val => \@ret_val,
+		ret_val_count => scalar @$ret_val,
+		ret_val => $ret_val,
 	};
 }
 

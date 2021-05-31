@@ -45,7 +45,7 @@ sub _number_of_jokes() {
 # found in the file.
 sub _get_random_qa($max) {
 	my $joke_num = int(rand($max));
-	my $q, $a;
+	my @qa;
 
 	if (not -r $jokes_file) {
 		log_error("failed to read file $jokes_file");
@@ -59,17 +59,17 @@ sub _get_random_qa($max) {
 		# question and sum 1 to get the question. Reminder: questions
 		# are placed in the odd lines, while the answer for that question
 		# goes one line after.
-		if (not defined $q) {
+		if (not defined $qa[0]) {
 			next unless ($. == ($joke_num * 2 + 1));
-			$q = $_;
+			$qa[0] = $_;
 		} else {
-			$a = $_;
+			$qa[1] = $_;
 			last;
 		}
 	}
 
 	close($fh);
-	return [$q, $a];
+	return \@qa;
 }
 
 # Whenever the regex for this plugin (defined in register()) matches a message,
@@ -79,11 +79,11 @@ sub call($user) {
 	return BotZao::Plugins::Core::plugin_ret(())
 		unless BotZao::Commands::has_permission($plugin_cmd, $user);
 
-	my ($q, $a) = @{ _get_random_qa($jokes_count) };
-	log_error("joke index greater than joke count") unless $q;
-	log_debug("question: " . $q);
-	log_debug("answer: " . $a);
-	return BotZao::Plugins::Core::plugin_ret(($q, $a));
+	my $qa = _get_random_qa($jokes_count);
+	log_error("joke index greater than joke count") unless $qa;
+	log_debug("question: " . $qa->[0]);
+	log_debug("answer: " . $qa->[1]);
+	return BotZao::Plugins::Core::plugin_ret($qa);
 }
 
 # Get specific config options for this plugin.
