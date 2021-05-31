@@ -27,12 +27,15 @@ use BotZao::Log qw(log_debug log_info log_error log_fatal);
 
 my $cfg_topic = 'core';
 my $cfg_opt_plugins = 'plugins';
-# array of plugin refs:
-# [
-#	{ name, &init, &run, trigger, enabled },
-#	{ name, &init, &run, trigger, enabled },
-#	{ name, &init, &run, trigger, enabled },
-# ]
+
+# Plugin information hash, used throughout the plugin infra code
+my %plugin_ref = (
+	name => undef,    # string
+	init => undef,    # function ref
+	run => undef,     # function ref
+	trigger => undef, # regex string
+	enabled => undef  # boolean
+);
 my @enabled_plugins_ref;
 
 # Get all plugins listed in the configuration file and load them dinamically
@@ -69,20 +72,30 @@ sub export_plugins_info() {
 	return \@infos;
 }
 
+# Create a copy of the plugin info specification hash and returns to the
+# plugin requiring it.
+sub plugin_create_ref($name) {
+	my %pinfo = %plugin_ref;
+
+	$pinfo{name} = $name;
+	$pinfo{enabled} = 0;
+	return \%pinfo;
+}
+
 # Adds the plugin the the array of enabled plugins, that must be checked and
 # used later when the bot starts to handle the messages. Beyond the usual data
 # this function also adds the $name of the plugin and its state $enabled.
-sub plugin_add($name, %info) {
-	my %plugin = (
-		name => $name,
-		init => $info{init},
-		run => $info{run},
-		trigger => $info{trigger},
-		enabled => 0,
-	);
+sub plugin_add($info) {
+	foreach my $k (keys %$info) {
+		if (not defined $info->{$k}) {
+			my $pname = $info->{name} // 'unknown';
+			log_error("$pname plugin info \"$k\" undefined. skipping plugin.");
+			return;
+		}
+	}
 
-	log_debug("plugin added:\n".Dumper(%plugin));
-	push @enabled_plugins_ref, \%plugin;
+	log_debug("plugin added:\n".Dumper(%$info));
+	push @enabled_plugins_ref, $info;
 	return;
 }
 

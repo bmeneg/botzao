@@ -106,15 +106,15 @@ sub init(%config) {
 # Plugin callback API function: called when registering the plugin in the
 # generic plugin system within each specific IM core.
 sub register() {
-	my %plugin_info = (
-		init => \&init,
-		run => \&call,
-		trigger => qr/${cmd_prefix}[jJ][oO][kK][eE]/,
-	);
+	my $pinfo = BotZao::Plugins::Core::plugin_create_ref($plugin_name);
+
+	$pinfo->{init} = \&init;
+	$pinfo->{run} = \&call;
+	$pinfo->{trigger} = qr/${cmd_prefix}[jJ][oO][kK][eE]/;
 
 	log_debug("daddyjokes: register");
 
-	BotZao::Plugins::Core::plugin_add($plugin_name, %plugin_info);
+	BotZao::Plugins::Core::plugin_add($pinfo);
 	BotZao::Commands::add_channel_cmd($plugin_cmd);
 	return;
 }
