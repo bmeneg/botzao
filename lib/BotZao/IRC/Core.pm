@@ -54,8 +54,8 @@ sub init(%config) {
 }
 
 # run must be called only once plugins are properly setup.
-sub run(@args) {
-	if (@#args != 1) {
+sub run($args) {
+	if (scalar @$args != 1) {
 		log_error("irc bot must have one argument only");
 		return -1;
 	}

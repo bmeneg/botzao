@@ -36,7 +36,7 @@ if (defined $args{'c'}) {
 }
 
 BotZao::Core::init($cfg_file);
-BotZao::Core::run(@ARGV);
+BotZao::Core::run(\@ARGV);
 
 sub HELP_MESSAGE {
 	print <<~ "_END_HELP";
