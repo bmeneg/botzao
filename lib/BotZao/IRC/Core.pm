@@ -41,7 +41,7 @@ sub init(%config) {
 	# Bot-IRC keep the order of added plugins, and generic plugins
 	# should take precedence, so overwriting default plugins are possible
 	@plugins = @{ BotZao::Plugins::Core::export_plugins_info() };
-	BotZao::IRC::GenericHook::load(@plugins);
+	BotZao::IRC::GenericHook::load(\@plugins);
 	$bot->load("BotZao::IRC::GenericHook");
 
 	# Load the IRC specific plugins from config file

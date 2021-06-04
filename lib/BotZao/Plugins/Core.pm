@@ -47,10 +47,13 @@ sub _init_plugins(%config) {
 	foreach (@plugins) {
 		my $module = "BotZao::Plugins::$_";
 
-		eval "require $module";
-		log_fatal("failed to require plugin module $module: $@") if $@;
-		eval "${module}::register()";
-		log_fatal("failed to register plugin module $module: $@") if $@;
+		{
+			local $@;
+			eval "require $module";
+			log_fatal("failed to require plugin module $module: $@") if $@;
+			eval "${module}::register()";
+			log_fatal("failed to register plugin module $module: $@") if $@;
+		}
 	}
 
 	foreach my $pinfo (@enabled_plugins_ref) {
@@ -97,14 +100,6 @@ sub plugin_add($info) {
 	log_debug("plugin added:\n".Dumper(%$info));
 	push @enabled_plugins_ref, $info;
 	return;
-}
-
-# Default return value expected by the callback API.
-sub plugin_ret($ret_val) {
-	return {
-		ret_val_count => scalar @$ret_val,
-		ret_val => $ret_val,
-	};
 }
 
 sub init(%config) {

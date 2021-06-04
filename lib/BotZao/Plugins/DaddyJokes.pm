@@ -49,7 +49,7 @@ sub _get_random_qa($max) {
 
 	if (not -r $jokes_file) {
 		log_error("failed to read file $jokes_file");
-		return (-1, -1);
+		return;
 	}
 
 	open(my $fh, '<', $jokes_file);
@@ -76,14 +76,16 @@ sub _get_random_qa($max) {
 # this is the function being called.
 sub call($user) {
 	log_debug("$user asked for a DaddyJokes");
-	return BotZao::Plugins::Core::plugin_ret(())
-		unless BotZao::Commands::has_permission($plugin_cmd, $user);
+	return unless BotZao::Commands::has_permission($plugin_cmd, $user);
 
-	my $qa = _get_random_qa($jokes_count);
-	log_error("joke index greater than joke count") unless $qa;
-	log_debug("question: " . $qa->[0]);
-	log_debug("answer: " . $qa->[1]);
-	return BotZao::Plugins::Core::plugin_ret($qa);
+	my @qa = @{ _get_random_qa($jokes_count) };
+	if (not @qa) {
+		log_error("joke index greater than joke count");
+		return;
+	}
+	log_debug("question: " . $qa[0]);
+	log_debug("answer: " . $qa[1]);
+	return \@qa;
 }
 
 # Get specific config options for this plugin.

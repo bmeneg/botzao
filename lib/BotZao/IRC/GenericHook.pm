@@ -46,28 +46,27 @@ sub init(@args) {
 
 			foreach my $plugin (@generic_plugins) {
 				# Check for matching generic plugin trigger text
-				if ($m->{command} =~ /$plugin->{trigger}/) {
-					log_debug("plugin triggered: " . Dumper($plugin));
-					my $ret = $plugin->{run}->($in->{nick});
-					return 1 if $ret->{ret_val_count} == 0;
+				next unless ($m->{command} =~ /$plugin->{trigger}/);
 
-					foreach (0 .. ($ret->{ret_val_count} - 1)) {
-						my $line = $ret->{ret_val}->[$_];
-						$bot->reply("" . $line);
-					}
-					return 1;
+				log_debug("plugin triggered: " . Dumper($plugin));
+				my @ret = @{ $plugin->{run}->($in->{nick}) };
+				unless (@ret) {
+					log_error("not valid return from plugin \"$plugin->{name}\"");
+					return;
 				}
+
+				$bot->reply("" . $_) foreach @ret;
+				return;
 			}
 			log_info("no generic plugin triggered by: " . $m->{command});
-			return;
 		},
 	);
 	return;
 }
 
-sub load(@plugins) {
-	log_debug("generichook: load " . Dumper(@plugins));
-	@generic_plugins = @plugins;
+sub load($plugins) {
+	log_debug("generichook: load " . Dumper(@$plugins));
+	@generic_plugins = @$plugins;
 }
 
 1;
