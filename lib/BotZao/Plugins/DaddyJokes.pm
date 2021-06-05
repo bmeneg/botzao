@@ -24,19 +24,19 @@ use BotZao::Commands;
 use BotZao::Log qw(log_debug log_info log_error log_fatal);
 
 my $cmd_prefix = BotZao::Commands::prefix();
-my $plugin_name = "DaddyJokes";
+my $plugin_name = 'DaddyJokes';
 my $plugin_cmd = 'joke';
 
 # We allow a custom joke file from configuration file.
 my $cfg_opt_file = 'jokes_file';
-my $jokes_file = "./DaddyJokes.txt";
+my $jokes_file = './DaddyJokes.txt';
 my $jokes_count;
 
 # _number_of_jokes is useful for setting the upper limit of rand() later,
 # for choosing the Q&A themselvs.
 sub _number_of_jokes() {
 	open(my $fh, '<', $jokes_file) or
-		log_fatal("failed to read file $jokes_file");
+		log_fatal("Plugins:$plugin_name: failed to read file $jokes_file");
 	1 while (<$fh>);
 	return $. / 2;
 }
@@ -48,12 +48,14 @@ sub _get_random_qa($max) {
 	my @qa;
 
 	if (not -r $jokes_file) {
-		log_error("failed to read file $jokes_file");
+		log_error("Plugins:$plugin_name: failed to read file $jokes_file");
 		return;
 	}
 
 	open(my $fh, '<', $jokes_file);
 	while (<$fh>) {
+		chomp;
+
 		# we fist get the question based on the random number chosen,
 		# then we multiple that by 2 to find the line right before our
 		# question and sum 1 to get the question. Reminder: questions
@@ -75,16 +77,16 @@ sub _get_random_qa($max) {
 # Whenever the regex for this plugin (defined in register()) matches a message,
 # this is the function being called.
 sub call($user) {
-	log_debug("$user asked for a DaddyJokes");
+	log_debug("Plugins:$plugin_name: $user asked for a DaddyJokes");
 	return unless BotZao::Commands::has_permission($plugin_cmd, $user);
 
 	my @qa = @{ _get_random_qa($jokes_count) };
 	if (not @qa) {
-		log_error("joke index greater than joke count");
+		log_error("Plugins:$plugin_name: joke index greater than joke count");
 		return;
 	}
-	log_debug("question: " . $qa[0]);
-	log_debug("answer: " . $qa[1]);
+	log_debug("Plugins:$plugin_name: question: " . $qa[0]);
+	log_debug("Plugins:$plugin_name: answer: " . $qa[1]);
 	return \@qa;
 }
 
@@ -93,14 +95,14 @@ sub _init_config(%config) {
 	if (exists $config{"plugin_$plugin_name"}) {
 		my %cfg = %{$config{"plugin_$plugin_name"}};
 		$jokes_file = $cfg{$cfg_opt_file} if $cfg{$cfg_opt_file};
-		log_info("DaddyJokes file set to $jokes_file");
+		log_info("Plugins:$plugin_name: file set to $jokes_file");
 	}
 	return;
 }
 
 # called when initializing the plugin in the plugins system.
 sub init(%config) {
-	log_debug("daddyjokes: init");
+	log_debug("Plugins:${plugin_name}: init");
 	_init_config(%config);
 	$jokes_count = _number_of_jokes();
 }
@@ -114,7 +116,7 @@ sub register() {
 	$pinfo->{run} = \&call;
 	$pinfo->{trigger} = qr/${cmd_prefix}[jJ][oO][kK][eE]/;
 
-	log_debug("daddyjokes: register");
+	log_debug("Plugins:$plugin_name: register");
 
 	BotZao::Plugins::Core::plugin_add($pinfo);
 	BotZao::Commands::add_channel_cmd($plugin_cmd);

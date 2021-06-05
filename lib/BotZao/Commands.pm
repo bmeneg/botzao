@@ -12,7 +12,6 @@ use warnings;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Data::Dumper;
 use BotZao::Log qw(log_debug log_fatal);
 
 # Each perm level relates to the nature/type of the command.
@@ -68,9 +67,9 @@ sub has_permission($cmd, $user) {
 	my %i_user = _find_db_user_info($user);
 
 	return unless exists $cmd_valid{$cmd};
-	log_debug("command $cmd exist");
+	log_debug("Commands: \"$cmd\" found");
 	return 1 if $cmd_valid{$cmd} == PERM_NONE;
-	log_debug("command $cmd has permission greater than PERM_NONE");
+	log_debug("Commands: \"$cmd\" has permission greater than PERM_NONE");
 	return 1 if %i_user and $i_user{perm} >= $cmd_valid{$cmd};
 	return;
 }

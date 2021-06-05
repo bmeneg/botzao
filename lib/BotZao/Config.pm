@@ -24,14 +24,14 @@ sub _parse_toml($filename) {
 	# Config file passed by the user has precedence.
 	my $cfg_file = $filename // $cfg_file_default;
 	if (not -r $cfg_file) {
-		log_warn("config: failed to read $cfg_file");
+		log_warn("Config: failed to read $cfg_file");
 		return;
 	}
 
 	$data = path($cfg_file)->slurp();
 	($topics, $err) = from_toml($data);
 	if (not $topics) {
-		log_warn("config: error parsing toml: $err", 1);
+		log_warn("Config: error parsing toml: $err", 1);
 		return;
 	}
 	return $topics;
@@ -41,7 +41,7 @@ sub _parse_toml($filename) {
 # lock the hash to avoid further modification.
 sub load($filename) {
 	my %cfg_loaded = %{_parse_toml($filename)};
-	log_warn("Using default values.") unless %cfg_loaded;
+	log_warn("Config: using default values.") unless %cfg_loaded;
 	# Make sure we don't mess the hash in runtime
 	lock_hash(%cfg_loaded);
 	return \%cfg_loaded;

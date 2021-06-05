@@ -22,7 +22,6 @@ use warnings;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Data::Dumper;
 use BotZao::Log qw(log_debug log_info log_error log_fatal);
 
 my $cfg_topic = 'core';
@@ -43,22 +42,22 @@ my @enabled_plugins_ref;
 sub _init_plugins(%config) {
 	my @plugins = @{$config{$cfg_topic}{$cfg_opt_plugins}};
 
-	log_debug("plugins loaded: @plugins");
 	foreach (@plugins) {
+		log_debug('Plugins: loaded: ' . $_);
 		my $module = "BotZao::Plugins::$_";
 
 		{
 			local $@;
 			eval "require $module";
-			log_fatal("failed to require plugin module $module: $@") if $@;
+			log_fatal("Plugins: failed to require module $module: $@") if $@;
 			eval "${module}::register()";
-			log_fatal("failed to register plugin module $module: $@") if $@;
+			log_fatal("Plugins: failed to register module $module: $@") if $@;
 		}
 	}
 
 	foreach my $pinfo (@enabled_plugins_ref) {
 		$pinfo->{init}->(%config) or
-			log_fatal("failed to load plugin " . $pinfo->{name});
+			log_fatal('Plugins: failed to load ' . $pinfo->{name});
 		$pinfo->{enabled} = 1;
 	}
 	return;
@@ -70,7 +69,11 @@ sub export_plugins_info() {
 
 	foreach my $pinfo (@enabled_plugins_ref) {
 		next unless $pinfo->{enabled};
-		push @infos, { run => $pinfo->{run}, trigger => $pinfo->{trigger} };
+		push @infos, {
+				name => $pinfo->{name},
+				run => $pinfo->{run},
+				trigger => $pinfo->{trigger}
+			};
 	}
 	return \@infos;
 }
@@ -92,12 +95,12 @@ sub plugin_add($info) {
 	foreach my $k (keys %$info) {
 		if (not defined $info->{$k}) {
 			my $pname = $info->{name} // 'unknown';
-			log_error("$pname plugin info \"$k\" undefined. skipping plugin.");
+			log_error("Plugins: \"$pname\" field \"$k\" undefined. skipping plugin.");
 			return;
 		}
 	}
 
-	log_debug("plugin added:\n".Dumper(%$info));
+	log_debug("Plugins: added: \"$info->{name}\", \"$info->{trigger}\"");
 	push @enabled_plugins_ref, $info;
 	return;
 }
@@ -106,7 +109,7 @@ sub init(%config) {
 	my @plugins;
 
 	if (not $config{$cfg_topic}{$cfg_opt_plugins}) {
-		log_debug("no generic IM plugins were specified");
+		log_debug('Plugins: no generic IM plugins were specified');
 		return;
 	}
 

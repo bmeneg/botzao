@@ -28,21 +28,24 @@ use constant {
 	LOG_LEVEL__LAST => 5,
 };
 
+# log default values
+my $DEFAULT_LOG_FILE = './botzao.log';
+my $DEFAULT_LOG_LEVEL = LOG_LEVEL_WARN;
+
 my $cfg_topic = 'core';
 my $cfg_opt_file = 'log_file';
 my $cfg_opt_level = 'log_level';
-# log default values
 my %cfg = (
-	file => './botzao.log',
-	level => LOG_LEVEL_WARN,
+	file => undef,
+	level => 0,
 );
 
 sub log_error($msg) {
 	return if $cfg{level} < LOG_LEVEL_ERROR;
 
-	carp("error: $msg\n");
+	carp("ERROR: $msg\n");
 	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
-	print $fh ctime() . " | error: $msg\n";
+	print $fh ctime() . " | ERROR: $msg\n";
 	close($fh) or carp('failed to close log file');
 	return;
 }
@@ -55,9 +58,9 @@ sub log_fatal($msg) {
 sub log_warn($msg) {
 	return if $cfg{level} < LOG_LEVEL_WARN;
 
-	carp("warning: $msg\n");
+	carp("WARN: $msg\n");
 	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
-	print $fh ctime() . " | warning: $msg\n";
+	print $fh ctime() . " | WARN: $msg\n";
 	close($fh) or carp('failed to close log file');
 	return;
 }
@@ -65,9 +68,9 @@ sub log_warn($msg) {
 sub log_info($msg) {
 	return if $cfg{level} < LOG_LEVEL_INFO;
 
-	print STDOUT "info: $msg\n";
+	print STDOUT "INFO: $msg\n";
 	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
-	print $fh ctime() . " | info: $msg\n";
+	print $fh ctime() . " | INFO: $msg\n";
 	close($fh) or carp('failed to close log file');
 	return;
 }
@@ -75,9 +78,9 @@ sub log_info($msg) {
 sub log_debug($msg) {
 	return if $cfg{level} < LOG_LEVEL_DEBUG;
 
-	print STDOUT "debug: $msg\n";
+	print STDOUT "DEBUG: $msg\n";
 	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
-	print $fh ctime() . " | debug: $msg\n";
+	print $fh ctime() . " | DEBUG: $msg\n";
 	close($fh) or carp('failed to close log file');
 	return;
 }
@@ -86,8 +89,8 @@ sub init(%config) {
 	my %cfg_log = %{$config{$cfg_topic}};
 
 	# prefer the values stored in the config file
-	$cfg{file} = $cfg_log{$cfg_opt_file} if $cfg_log{$cfg_opt_file};
-	$cfg{level} = $cfg_log{$cfg_opt_level} if $cfg_log{$cfg_opt_level};
+	$cfg{file} = $cfg_log{$cfg_opt_file} // $DEFAULT_LOG_FILE;
+	$cfg{level} = $cfg_log{$cfg_opt_level} // $DEFAULT_LOG_LEVEL;
 	return -1 if ($cfg{level} < LOG_LEVEL__LAST);
 	return;
 }
