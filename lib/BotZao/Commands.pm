@@ -67,9 +67,9 @@ sub has_permission($cmd, $user) {
 	my %i_user = _find_db_user_info($user);
 
 	return unless exists $cmd_valid{$cmd};
-	log_debug("Commands: \"$cmd\" found");
+	log_debug("\"$cmd\" found");
 	return 1 if $cmd_valid{$cmd} == PERM_NONE;
-	log_debug("Commands: \"$cmd\" has permission greater than PERM_NONE");
+	log_debug("\"$cmd\" has permission greater than PERM_NONE");
 	return 1 if %i_user and $i_user{perm} >= $cmd_valid{$cmd};
 	return;
 }

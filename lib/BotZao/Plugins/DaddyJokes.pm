@@ -36,7 +36,7 @@ my $jokes_count;
 # for choosing the Q&A themselvs.
 sub _number_of_jokes() {
 	open(my $fh, '<', $jokes_file) or
-		log_fatal("Plugins:$plugin_name: failed to read file $jokes_file");
+		log_fatal('failed to read file ' . $jokes_file);
 	1 while (<$fh>);
 	return $. / 2;
 }
@@ -48,7 +48,7 @@ sub _get_random_qa($max) {
 	my @qa;
 
 	if (not -r $jokes_file) {
-		log_error("Plugins:$plugin_name: failed to read file $jokes_file");
+		log_error('failed to read file ' . $jokes_file);
 		return;
 	}
 
@@ -77,16 +77,16 @@ sub _get_random_qa($max) {
 # Whenever the regex for this plugin (defined in register()) matches a message,
 # this is the function being called.
 sub call($user) {
-	log_debug("Plugins:$plugin_name: $user asked for a DaddyJokes");
+	log_debug("$user asked for a DaddyJokes");
 	return unless BotZao::Commands::has_permission($plugin_cmd, $user);
 
 	my @qa = @{ _get_random_qa($jokes_count) };
 	if (not @qa) {
-		log_error("Plugins:$plugin_name: joke index greater than joke count");
+		log_error('joke index greater than joke count');
 		return;
 	}
-	log_debug("Plugins:$plugin_name: question: " . $qa[0]);
-	log_debug("Plugins:$plugin_name: answer: " . $qa[1]);
+	log_debug('question: ' . $qa[0]);
+	log_debug('answer: ' . $qa[1]);
 	return \@qa;
 }
 
@@ -95,14 +95,14 @@ sub _init_config(%config) {
 	if (exists $config{"plugin_$plugin_name"}) {
 		my %cfg = %{$config{"plugin_$plugin_name"}};
 		$jokes_file = $cfg{$cfg_opt_file} if $cfg{$cfg_opt_file};
-		log_info("Plugins:$plugin_name: file set to $jokes_file");
+		log_info("file set to $jokes_file");
 	}
 	return;
 }
 
 # called when initializing the plugin in the plugins system.
 sub init(%config) {
-	log_debug("Plugins:${plugin_name}: init");
+	log_debug("init");
 	_init_config(%config);
 	$jokes_count = _number_of_jokes();
 }
@@ -116,7 +116,7 @@ sub register() {
 	$pinfo->{run} = \&call;
 	$pinfo->{trigger} = qr/${cmd_prefix}[jJ][oO][kK][eE]/;
 
-	log_debug("Plugins:$plugin_name: register");
+	log_debug("register");
 
 	BotZao::Plugins::Core::plugin_add($pinfo);
 	BotZao::Commands::add_channel_cmd($plugin_cmd);

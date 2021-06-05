@@ -43,21 +43,21 @@ sub _init_plugins(%config) {
 	my @plugins = @{$config{$cfg_topic}{$cfg_opt_plugins}};
 
 	foreach (@plugins) {
-		log_debug('Plugins: loaded: ' . $_);
+		log_debug('loaded: ' . $_);
 		my $module = "BotZao::Plugins::$_";
 
 		{
 			local $@;
 			eval "require $module";
-			log_fatal("Plugins: failed to require module $module: $@") if $@;
+			log_fatal("failed to require module $module: $@") if $@;
 			eval "${module}::register()";
-			log_fatal("Plugins: failed to register module $module: $@") if $@;
+			log_fatal("failed to register module $module: $@") if $@;
 		}
 	}
 
 	foreach my $pinfo (@enabled_plugins_ref) {
 		$pinfo->{init}->(%config) or
-			log_fatal('Plugins: failed to load ' . $pinfo->{name});
+			log_fatal('failed to load ' . $pinfo->{name});
 		$pinfo->{enabled} = 1;
 	}
 	return;
@@ -95,12 +95,12 @@ sub plugin_add($info) {
 	foreach my $k (keys %$info) {
 		if (not defined $info->{$k}) {
 			my $pname = $info->{name} // 'unknown';
-			log_error("Plugins: \"$pname\" field \"$k\" undefined. skipping plugin.");
+			log_error("\"$pname\" field \"$k\" undefined. skipping plugin.");
 			return;
 		}
 	}
 
-	log_debug("Plugins: added: \"$info->{name}\", \"$info->{trigger}\"");
+	log_debug("added: \"$info->{name}\", \"$info->{trigger}\"");
 	push @enabled_plugins_ref, $info;
 	return;
 }
@@ -109,7 +109,7 @@ sub init(%config) {
 	my @plugins;
 
 	if (not $config{$cfg_topic}{$cfg_opt_plugins}) {
-		log_debug('Plugins: no generic IM plugins were specified');
+		log_debug('no generic IM plugins were specified');
 		return;
 	}
 

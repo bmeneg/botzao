@@ -40,48 +40,44 @@ my %cfg = (
 	level => 0,
 );
 
+sub _do_log($prefix, $msg) {
+	my ($pkg, undef, $line) = caller(1);
+	$pkg =~ s/BotZao:://;
+	my $text = "$prefix ${pkg}[$line]: $msg";
+
+	print STDOUT "$text\n";
+	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
+	print $fh ctime() . " | $text\n";
+	close($fh) or carp('failed to close log file');
+	return;
+}
+
 sub log_error($msg) {
 	return if $cfg{level} < LOG_LEVEL_ERROR;
-
-	carp("ERROR: $msg\n");
-	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
-	print $fh ctime() . " | ERROR: $msg\n";
-	close($fh) or carp('failed to close log file');
+	_do_log('ERROR', $msg);
 	return;
 }
 
 sub log_fatal($msg) {
 	log_error($msg);
-	croak('Fatal error');
+	croak('FATAL ERROR');
 }
 
 sub log_warn($msg) {
 	return if $cfg{level} < LOG_LEVEL_WARN;
-
-	carp("WARN: $msg\n");
-	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
-	print $fh ctime() . " | WARN: $msg\n";
-	close($fh) or carp('failed to close log file');
+	_do_log('WARN', $msg);
 	return;
 }
 
 sub log_info($msg) {
 	return if $cfg{level} < LOG_LEVEL_INFO;
-
-	print STDOUT "INFO: $msg\n";
-	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
-	print $fh ctime() . " | INFO: $msg\n";
-	close($fh) or carp('failed to close log file');
+	_do_log('INFO', $msg);
 	return;
 }
 
 sub log_debug($msg) {
 	return if $cfg{level} < LOG_LEVEL_DEBUG;
-
-	print STDOUT "DEBUG: $msg\n";
-	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
-	print $fh ctime() . " | DEBUG: $msg\n";
-	close($fh) or carp('failed to close log file');
+	_do_log('DEBUG', $msg);
 	return;
 }
 
