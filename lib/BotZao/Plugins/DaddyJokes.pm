@@ -91,9 +91,9 @@ sub call($user) {
 }
 
 # Get specific config options for this plugin.
-sub _init_config(%config) {
-	if (exists $config{"plugin_$plugin_name"}) {
-		my %cfg = %{$config{"plugin_$plugin_name"}};
+sub _init_config($config) {
+	if (exists $config->{"plugin_$plugin_name"}) {
+		my %cfg = %{$config->{"plugin_$plugin_name"}};
 		$jokes_file = $cfg{$cfg_opt_file} if $cfg{$cfg_opt_file};
 		log_info("file set to $jokes_file");
 	}
@@ -101,9 +101,9 @@ sub _init_config(%config) {
 }
 
 # called when initializing the plugin in the plugins system.
-sub init(%config) {
+sub init($config) {
 	log_debug("init");
-	_init_config(%config);
+	_init_config($config);
 	$jokes_count = _number_of_jokes();
 }
 

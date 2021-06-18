@@ -16,9 +16,9 @@ use BotZao::Plugins::Core;
 use BotZao::IRC::Core;
 
 # Init every single IM protocol we support
-sub init(%config) {
-	BotZao::Plugins::Core::init(%config);
-	BotZao::IRC::Core::init(%config);
+sub init($config) {
+	BotZao::Plugins::Core::init($config);
+	BotZao::IRC::Core::init($config);
 	return 1;
 }
 

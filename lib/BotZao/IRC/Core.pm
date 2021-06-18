@@ -19,23 +19,23 @@ my %cfg_loaded = (
 
 # Initialize the Bot-IRC module with the config file information.
 # TODO: redirect Bot-IRC output to the same as BotZao.
-sub _init_config(%config) {
+sub _init_config($config) {
 	$bot = Bot::IRC->new(
 		connect => {
-			server	=> $config{irc}{server} // 'irc.libera.chat',
-			port	=> $config{irc}{port} // '6697',
+			server	=> $config->{irc}{server} // 'irc.libera.chat',
+			port	=> $config->{irc}{port} // '6697',
 			ssl	=> 0,
 			ipv6	=> 0,
-			nick	=> $config{irc}{nick} // 'botiozao',
-			join	=> $config{irc}{channels} // ['##BotZao'],
+			nick	=> $config->{irc}{nick} // 'botiozao',
+			join	=> $config->{irc}{channels} // ['##BotZao'],
 		},
 	);
 }
 
-sub init(%config) {
+sub init($config) {
 	my @plugins;
 
-	_init_config(%config);
+	_init_config($config);
 
 	# Bot-IRC keep the order of added plugins, and generic plugins
 	# should take precedence, so overwriting default plugins are possible
@@ -44,7 +44,7 @@ sub init(%config) {
 	$bot->load("BotZao::IRC::GenericHook");
 
 	# Load the IRC specific plugins from config file
-	@plugins = @{ $config{irc}{plugins} };
+	@plugins = @{$config->{irc}{plugins}};
 	foreach (@plugins) {
 		$bot->load($_);
 	}

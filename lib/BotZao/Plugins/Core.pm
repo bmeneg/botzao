@@ -39,8 +39,8 @@ my @enabled_plugins_ref;
 
 # Get all plugins listed in the configuration file and load them dinamically
 # by calling their register() function.
-sub _init_plugins(%config) {
-	my @plugins = @{$config{$cfg_topic}{$cfg_opt_plugins}};
+sub _init_plugins($config) {
+	my @plugins = @{$config->{$cfg_topic}{$cfg_opt_plugins}};
 
 	foreach (@plugins) {
 		log_debug('loaded: ' . $_);
@@ -56,7 +56,7 @@ sub _init_plugins(%config) {
 	}
 
 	foreach my $pinfo (@enabled_plugins_ref) {
-		$pinfo->{init}->(%config) or
+		$pinfo->{init}->($config) or
 			log_fatal('failed to load ' . $pinfo->{name});
 		$pinfo->{enabled} = 1;
 	}
@@ -105,15 +105,15 @@ sub plugin_add($info) {
 	return;
 }
 
-sub init(%config) {
+sub init($config) {
 	my @plugins;
 
-	if (not $config{$cfg_topic}{$cfg_opt_plugins}) {
+	if (not $config->{$cfg_topic}{$cfg_opt_plugins}) {
 		log_debug('no generic IM plugins were specified');
 		return;
 	}
 
-	_init_plugins(%config);
+	_init_plugins($config);
 	return;
 }
 

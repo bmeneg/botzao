@@ -81,8 +81,8 @@ sub log_debug($msg) {
 	return;
 }
 
-sub init(%config) {
-	my %cfg_log = %{$config{$cfg_topic}};
+sub init($config) {
+	my %cfg_log = %{ $config->{$cfg_topic} };
 
 	# prefer the values stored in the config file
 	$cfg{file} = $cfg_log{$cfg_opt_file} // $DEFAULT_LOG_FILE;
