@@ -9,5 +9,10 @@ port = "6667"
 nick = "botzao-test"
 plugins = ["Ping", "Greeting"]
 
+[irc_TwitchTV]
+username = "botiozao"
+channels = "botiozao"
+token = "oauth:qtujkkmulij73r9kpc9ebwgb41en48"
+
 [plugin_DaddyJokes]
 jokes_file = "./lib/BotZao/Plugins/DaddyJokes.txt"
