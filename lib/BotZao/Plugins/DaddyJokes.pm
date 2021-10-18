@@ -21,7 +21,7 @@ use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
 use BotZao::Commands;
-use BotZao::Log qw(log_debug log_info log_error log_fatal);
+use BotZao::Log qw(log_debug log_info log_error);
 
 my $cmd_prefix = BotZao::Commands::prefix();
 my $plugin_name = 'DaddyJokes';
@@ -35,8 +35,13 @@ my $jokes_count;
 # _number_of_jokes is useful for setting the upper limit of rand() later,
 # for choosing the Q&A themselvs.
 sub _number_of_jokes() {
-	open(my $fh, '<', $jokes_file) or
-		log_fatal('failed to read file ' . $jokes_file);
+	my $fh;
+
+	unless (open($fh, '<', $jokes_file)) {
+		log_error("failed to read file $jokes_file");
+		return;
+	}
+	
 	1 while (<$fh>);
 	return $. / 2;
 }
@@ -46,13 +51,13 @@ sub _number_of_jokes() {
 sub _get_random_qa($max) {
 	my $joke_num = int(rand($max));
 	my @qa;
+	my $fh;
 
-	if (not -r $jokes_file) {
-		log_error('failed to read file ' . $jokes_file);
+	unless (open($fh, '<', $jokes_file)) {
+		log_error("failed to read $jokes_file");
 		return;
 	}
 
-	open(my $fh, '<', $jokes_file);
 	while (<$fh>) {
 		chomp;
 
@@ -70,6 +75,7 @@ sub _get_random_qa($max) {
 		}
 	}
 
+	log_debug('joke list seems empty') if not @qa;
 	close($fh);
 	return \@qa;
 }
@@ -82,7 +88,7 @@ sub call($user) {
 
 	my @qa = @{ _get_random_qa($jokes_count) };
 	if (not @qa) {
-		log_error('joke index greater than joke count');
+		log_error('impossible to get a joke');
 		return;
 	}
 	log_debug('question: ' . $qa[0]);
@@ -95,16 +101,16 @@ sub _init_config($config) {
 	if (exists $config->{"plugin_$plugin_name"}) {
 		my %cfg = %{$config->{"plugin_$plugin_name"}};
 		$jokes_file = $cfg{$cfg_opt_file} if $cfg{$cfg_opt_file};
-		log_info("file set to $jokes_file");
 	}
-	return;
+	log_info("jokes file set to $jokes_file");
 }
 
 # called when initializing the plugin in the plugins system.
 sub init($config) {
 	log_debug("init");
 	_init_config($config);
-	$jokes_count = _number_of_jokes();
+	$jokes_count = _number_of_jokes() or return;
+	return 1;
 }
 
 # Plugin callback API function: called when registering the plugin in the
@@ -118,9 +124,12 @@ sub register() {
 
 	log_debug("register");
 
-	BotZao::Plugins::Core::plugin_add($pinfo);
+	unless (BotZao::Plugins::Core::plugin_add($pinfo)) {
+		log_error('plugin could not be registered');
+		return;
+	}
 	BotZao::Commands::add_channel_cmd($plugin_cmd);
-	return;
+	return 1;
 }
 
 1;

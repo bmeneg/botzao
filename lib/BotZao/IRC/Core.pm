@@ -48,18 +48,16 @@ sub init($config) {
 	foreach (@plugins) {
 		$bot->load($_);
 	}
-
-	return;
 }
 
 # run must be called only once plugins are properly setup.
 sub run($args) {
 	if (scalar @$args != 1) {
 		log_error("bot must have one argument only");
-		return -1;
+		return;
 	}
 	$bot->run();
-	return;
+	return 1;
 }
 
 1;

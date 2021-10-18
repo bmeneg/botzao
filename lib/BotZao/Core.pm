@@ -18,15 +18,15 @@ sub init($cfg_file) {
 
 	# We don't have log enabled yet, so use Carp directly here
 	BotZao::Log::init($cfg_loaded) or croak('failed to initialize logging system');
-	# Finally, some logging
-	BotZao::IM::init($cfg_loaded) or log_fatal('failed to initialize im');
+	BotZao::IM::init($cfg_loaded);
 }
 
 # Anything after the '--' is processed in here
 sub run(@args) {
-	my $err = BotZao::IM::run(@args);
-	log_fatal('failed to run im') if $err;
-	return;
+	unless (BotZao::IM::run(@args)) {
+		log_fatal('failed to run im');
+	}
+	return 1;
 }
 
 1;

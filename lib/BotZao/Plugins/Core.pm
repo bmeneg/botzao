@@ -12,6 +12,10 @@
 #
 # A hash containing at least the above information is used for lookup later,
 # when the bot starts running and handle the messages comming from the server.
+#
+# Plugins must not break the core during their init or run time, thus plugins
+# aren't allowed to call log_fatal() and, thus, any plugin returning errors
+# are skipped.
 
 package BotZao::Plugins::Core;
 
@@ -22,7 +26,7 @@ use warnings;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use BotZao::Log qw(log_debug log_info log_error log_fatal);
+use BotZao::Log qw(log_debug log_info log_warn log_error log_fatal);
 
 my $cfg_topic = 'core';
 my $cfg_opt_plugins = 'plugins';
@@ -38,7 +42,7 @@ my %plugin_ref = (
 my @enabled_plugins_ref;
 
 # Get all plugins listed in the configuration file and load them dinamically
-# by calling their register() function.
+# and call their register() function.
 sub _init_plugins($config) {
 	my @plugins = @{$config->{$cfg_topic}{$cfg_opt_plugins}};
 
@@ -49,18 +53,26 @@ sub _init_plugins($config) {
 		{
 			local $@;
 			eval "require $module";
-			log_fatal("failed to require module $module: $@") if $@;
-			eval "${module}::register()";
-			log_fatal("failed to register module $module: $@") if $@;
+			if ($@) {
+				log_warn("failed to require module $module: $@. skipping.");
+				return;
+			}
+			# register() must return a defined value on success.
+			eval "${module}::register() or die";
+			if ($@) {
+				log_warn("failed to register plugin $module: $@. skipping.");
+				return;
+			}
 		}
 	}
 
 	foreach my $pinfo (@enabled_plugins_ref) {
-		$pinfo->{init}->($config) or
-			log_fatal('failed to load ' . $pinfo->{name});
+		unless ($pinfo->{init}->($config)) {
+			log_warn("failed to init $pinfo->{name}. skipping plugin.");
+			continue;
+		};
 		$pinfo->{enabled} = 1;
 	}
-	return;
 }
 
 # Get plugins information based on their enabled state.
@@ -95,26 +107,25 @@ sub plugin_add($info) {
 	foreach my $k (keys %$info) {
 		if (not defined $info->{$k}) {
 			my $pname = $info->{name} // 'unknown';
-			log_error("\"$pname\" field \"$k\" undefined. skipping plugin.");
+			log_warn("\"$pname\" field \"$k\" undefined");
 			return;
 		}
 	}
 
 	log_debug("added: \"$info->{name}\", \"$info->{trigger}\"");
 	push @enabled_plugins_ref, $info;
-	return;
+	return 1;
 }
 
 sub init($config) {
 	my @plugins;
 
-	if (not $config->{$cfg_topic}{$cfg_opt_plugins}) {
+	unless ($config->{$cfg_topic}{$cfg_opt_plugins}) {
 		log_debug('no generic IM plugins were specified');
 		return;
 	}
 
 	_init_plugins($config);
-	return;
 }
 
 1;

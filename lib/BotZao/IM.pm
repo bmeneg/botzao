@@ -19,12 +19,15 @@ use BotZao::IRC::Core;
 sub init($config) {
 	BotZao::Plugins::Core::init($config);
 	BotZao::IRC::Core::init($config);
-	return 1;
 }
 
 # Trigger the core engine for all protocols we support.
 sub run(@args) {
-	return BotZao::IRC::Core::run(@args);
+	unless (BotZao::IRC::Core::run(@args)) {
+		log_debug("failed to run irc core");
+		return;
+	}
+	return 1;
 }
 
 1;
