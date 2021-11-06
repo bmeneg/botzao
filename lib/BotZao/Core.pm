@@ -22,8 +22,8 @@ sub init($cfg_file) {
 }
 
 # Anything after the '--' is processed in here
-sub run(@args) {
-	unless (BotZao::IM::run(@args)) {
+sub run($args) {
+	unless (BotZao::IM::run($args)) {
 		log_fatal('failed to run im');
 	}
 	return 1;

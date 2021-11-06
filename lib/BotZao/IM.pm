@@ -22,8 +22,8 @@ sub init($config) {
 }
 
 # Trigger the core engine for all protocols we support.
-sub run(@args) {
-	unless (BotZao::IRC::Core::run(@args)) {
+sub run($args) {
+	unless (BotZao::IRC::Core::run($args)) {
 		log_debug("failed to run irc core");
 		return;
 	}

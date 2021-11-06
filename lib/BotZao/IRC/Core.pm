@@ -10,7 +10,7 @@ no warnings qw(experimental::signatures);
 use Bot::IRC;
 
 use BotZao::IRC::GenericHook;
-use BotZao::Log qw(log_info log_error);
+use BotZao::Log qw(log_debug log_info log_error);
 
 my $bot;
 my %cfg_loaded = (

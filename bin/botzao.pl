@@ -14,7 +14,7 @@ no warnings qw(experimental::signatures);
 
 # General lib setup
 use FindBin;
-use lib "$FindBin::Bin/../lib";
+use lib qq($FindBin::Bin/../lib);
 use Getopt::Std;
 
 # Local libs
