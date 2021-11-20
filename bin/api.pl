@@ -9,6 +9,7 @@ use FindBin;
 use lib qq($FindBin::Bin/../lib);
 
 use API::Routes;
+use API::MsgQueue;
 
 my $app = Mojo::Server::Daemon->new->build_app("API::Routes");
 my $daemon = Mojo::Server::Daemon->new(app => $app);

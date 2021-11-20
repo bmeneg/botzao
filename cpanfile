@@ -1,5 +1,6 @@
 requires 'Bot::IRC'; # IRC Bot module
 requires 'TOML'; # config file
+requires 'Net::AMQP::RabbitMQ';
 
 on 'develop' => sub {
 	requires 'Devel::NYTProf'
