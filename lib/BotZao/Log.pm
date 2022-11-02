@@ -1,7 +1,6 @@
 # The logging system is somewhat the same for every project.
 # All call to the log_* functions stores the log in a specific file (possibly
 # defined in the config file) and also print to STDOUT.
-# TODO: allow an option (--quiet ?) to disable logging to STDOUT.
 
 package BotZao::Log;
 
@@ -31,13 +30,16 @@ use constant {
 # log default values
 my $DEFAULT_LOG_FILE = './botzao.log';
 my $DEFAULT_LOG_LEVEL = LOG_LEVEL_WARN;
+my $DEFAULT_LOG_QUIET = 0;
 
 my $cfg_topic = 'core';
 my $cfg_opt_file = 'log_file';
 my $cfg_opt_level = 'log_level';
+my $cfg_opt_quiet = 'log_quiet';
 my %cfg = (
 	file => undef,
 	level => 0,
+	quiet => 0,
 );
 
 sub _do_log($prefix, $msg) {
@@ -45,7 +47,7 @@ sub _do_log($prefix, $msg) {
 	$pkg =~ s/BotZao:://;
 	my $text = "$prefix ${pkg}[$line]: $msg";
 
-	print STDOUT "$text\n";
+	print STDOUT "$text\n" unless $cfg{quiet};
 	open(my $fh, '>>', $cfg{file}) or carp('failed to write to log file');
 	print $fh ctime() . " | $text\n";
 	close($fh) or carp('failed to close log file');
@@ -87,6 +89,7 @@ sub init($config) {
 	# prefer the values stored in the config file
 	$cfg{file} = $cfg_log{$cfg_opt_file} // $DEFAULT_LOG_FILE;
 	$cfg{level} = $cfg_log{$cfg_opt_level} // $DEFAULT_LOG_LEVEL;
+	$cfg{quiet} = $cfg_log{$cfg_opt_quiet} // $DEFAULT_LOG_QUIET;
 	return -1 if ($cfg{level} < LOG_LEVEL__LAST);
 	return;
 }
