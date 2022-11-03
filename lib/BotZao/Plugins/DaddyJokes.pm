@@ -20,6 +20,8 @@ use strict;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
+use Encode;
+
 use BotZao::Commands;
 use BotZao::Log qw(log_debug log_info log_error);
 
@@ -68,9 +70,9 @@ sub _get_random_qa($max) {
 		# goes one line after.
 		if (not defined $qa[0]) {
 			next unless ($. == ($joke_num * 2 + 1));
-			$qa[0] = $_;
+			$qa[0] = Encode::decode('UTF-8', $_);
 		} else {
-			$qa[1] = $_;
+			$qa[1] = Encode::decode('UTF-8', $_);
 			last;
 		}
 	}
