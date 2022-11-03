@@ -15,6 +15,8 @@ no warnings qw(experimental::signatures);
 use BotZao::Plugins::Core;
 use BotZao::IRC::Core;
 
+use BotZao::Log qw(log_debug);
+
 # Init every single IM protocol we support
 sub init($config) {
 	BotZao::Plugins::Core::init($config);
