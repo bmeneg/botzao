@@ -21,7 +21,7 @@ use Getopt::Std;
 use BotZao::Core;
 
 $Getopt::Std::STANDARD_HELP_VERSION = 1;
-our $VERSION = "0.1";
+our $VERSION = "0.4";
 
 my %args;
 getopts("c:", \%args);
